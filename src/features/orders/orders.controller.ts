@@ -19,7 +19,7 @@ export const createOrder = async (req: Request, res: Response) => {
             });
         }
         if (!productData.inStock || productData.quantity < req.body.quantity) {
-            console.log(productData);
+
             return res.status(400).json({
                 message: "Insufficient stock",
                 success: false,
