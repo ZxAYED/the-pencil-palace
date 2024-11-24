@@ -1,6 +1,5 @@
 export interface IProduct {
-    name:
-    string;
+    name: string;
     brand: string;
     price: number;
     category: 'Writing' | 'Office Supplies' | 'Art Supplies' | 'Educational' | 'Technology';
