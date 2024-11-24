@@ -1,7 +1,7 @@
 {
   "name": "the-pencil-palace",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/server.js",
@@ -22,7 +22,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "mongodb": "^6.11.0",
-    "mongoose": "^8.8.2"
+    "mongoose": "^8.8.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
