@@ -16,7 +16,7 @@ const createproduct = async (req: Request, res: Response) => {
         })
     }
     catch (error) {
-        res.json({
+        res.status(500).json({
             "message": "Error while creating a products",
             "success": false,
             "status": 404,
@@ -36,7 +36,7 @@ const getAllproducts = async (req: Request, res: Response) => {
         })
     }
     catch (error) {
-        res.json({
+        res.status(500).json({
             "message": "Error while retrieved  a products",
             "success": false,
             "status": 404,
@@ -58,10 +58,10 @@ const getSingleproduct = async (req: Request, res: Response) => {
         })
     }
     catch (error) {
-        res.json({
+        res.status(500).json({
             "message": "Error while retrieved  a product",
             "success": false,
-            "status": 404,
+            "status": 500,
             error
         })
     }

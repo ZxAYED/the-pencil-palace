@@ -18,6 +18,6 @@ const productsSchema = new Schema({
     { timestamps: true });
 
 
-const productsModel = model<IProduct>('products', productsSchema);
+const productsModel = model<IProduct>('products', productsSchema,);
 
 export default productsModel;

@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import userRouter from './features/products/products.routes'
+import productsRouter from './features/products/products.routes'
 
 const app = express()
 
@@ -8,11 +8,9 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.use('/api/products', userRouter);
+app.use('/api/products', productsRouter);
 
-app.use((req, res, next) => {
-  res.status(404).send({ error: 'Route not found' });
-});
+
 
 
 
@@ -21,7 +19,7 @@ app.get('/', (req, res) => {
 })
 
 
-
+// 
 
 
 export default app
