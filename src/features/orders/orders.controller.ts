@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import OrderModel from "./orders.model";
-import productsModel from "../products/products.model";
-
-import { IProduct } from "../products/products.interface";
+import productsModel from "../products/products.model"
 import IOrder from "./orders.interface";
 
 
@@ -31,9 +29,6 @@ export const createOrder = async (req: Request, res: Response) => {
             inStock: !quantity ? false : true
         }
         await productsModel.findByIdAndUpdate(payload.product, updatedData)
-
-
-
         const result = await OrderModel.create(payload)
         res.status(200).json({
             "message": " Order has been placed ",
@@ -50,8 +45,30 @@ export const createOrder = async (req: Request, res: Response) => {
             error
         })
     }
+}
+const generateRevenue = async (req: Request, res: Response) => {
+
+    try {
+
+    }
+    catch (error) {
+        res.status(500).json({
+            "message": "Error while generating revenue",
+            "success": false,
+            "status": 500,
+            error
+        })
+    }
+
 
 }
+
+
+
+
+
+
+
 
 export const orderController = {
     createOrder

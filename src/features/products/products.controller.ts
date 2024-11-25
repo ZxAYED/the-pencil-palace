@@ -22,7 +22,7 @@ const createproduct = async (req: Request, res: Response) => {
             "status": 404,
             error
         })
-        console.log(error);
+
     }
 
 }
