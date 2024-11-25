@@ -1,10 +1,8 @@
-
-
 interface IOrder {
-    email: string;
-    product: string
-    quantity: number;
-    totalPrice: number;
+  email: string
+  product: string
+  quantity: number
+  totalPrice: number
 }
 
-export default IOrder;
+export default IOrder
