@@ -91,7 +91,9 @@ const deleteProduct = async (req: Request, res: Response) => {
   try {
     const payload = req.params.productId
     // const validPaylod = productsValidationSchema.parse(payload)
-    const result = await productsModel.findByIdAndDelete(payload)
+    const result = await productsModel.findByIdAndDelete(payload, {
+      new: true,
+    })
     res.json({
       message: 'Product deleted successfully',
       success: true,
