@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import productsModel from './products.model'
 
 import { productsValidationSchema } from './products.validation'
+import { ProductFilter } from './products.interface'
+
 
 const createproduct = async (req: Request, res: Response) => {
   try {
@@ -26,7 +28,7 @@ const createproduct = async (req: Request, res: Response) => {
 const getAllproducts = async (req: Request, res: Response) => {
   try {
     const { name, brand, category } = req.query
-    const filter = {}
+    const filter: { [key: string]: any } = {}
     if (name) filter.name = name
     if (brand) filter.brand = brand
     if (category) filter.category = category

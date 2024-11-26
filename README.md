@@ -92,6 +92,8 @@ MongoDB (local or remote instance)
    PORT=5000
    MONGO_URI=mongodb://localhost:27017/stationery-shop
    NODE_ENV=development
+   OR this is the production api , You can use it directly in your app -
+   https://github.com/ZxAYED/the-pencil-palace
 
 4. Start the Application
    For development:
