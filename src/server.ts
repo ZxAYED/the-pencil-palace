@@ -9,7 +9,7 @@ async function main() {
 
     app.listen(config.port, () => {
       console.log(
-        `kemne ki the pencil palace bole choltese on port ${config.port}`,
+        ` the pencil is flying on port ${config.port}`,
       )
     })
   } catch (error) {

@@ -42,6 +42,11 @@ const createOrder = async (req: Request, res: Response, next: NextFunction): Pro
   }
 };
 
+const getAllOrder = async (req, res) => {
+  const result = await OrderModel.find()
+  res.send(result)
+}
+
 const generateRevenue = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const result = await OrderModel.aggregate([
@@ -79,5 +84,5 @@ const generateRevenue = async (req: Request, res: Response, next: NextFunction):
 
 export const orderController = {
   createOrder,
-  generateRevenue,
+  generateRevenue, getAllOrder
 };

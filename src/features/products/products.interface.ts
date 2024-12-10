@@ -13,4 +13,8 @@ export interface IProduct {
   photo: number
   inStock: boolean
 }
-export interface ProductFilter { name?: string; brand?: string; category?: string; }
+export interface ProductFilter {
+  name?: string;
+  brand?: string;
+  category?: string;
+}
