@@ -20,6 +20,6 @@ export interface IAuthRegister {
     status: 'active' | 'blocked';
     isDeleted: boolean;
     address: string,
-    profileImg: string
+    profileImage: string
 }
 

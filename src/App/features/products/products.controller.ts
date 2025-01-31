@@ -6,7 +6,7 @@ import CatchAsync from '../../utils/CatchAsync'
 
 const createproduct = async (req: Request, res: Response) => {
 
-  const result = await productsService.createProductIntoDb(req.body)
+  const result = await productsService.createProductIntoDb(req.file, req.body)
   res.status(200).json({
     message: 'Product created successfully',
     status: true,

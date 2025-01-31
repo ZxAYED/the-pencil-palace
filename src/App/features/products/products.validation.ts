@@ -13,7 +13,7 @@ const createProductsValidationSchema = z.object({
   ]),
   description: z.string().min(1, 'Description is required'),
   quantity: z.number().int().min(0, 'Quantity must be a positive integer'),
-  photo: z.string().min(1, 'Photo is required'),
+  profileImage: z.string().min(1, 'profileImage is required'),
   inStock: z.boolean(),
 })
 
@@ -30,7 +30,7 @@ const updateProductsValidationSchema = z.object({
   ]).optional(),
   description: z.string().min(1, 'Description is required').optional(),
   quantity: z.number().int().min(0, 'Quantity must be a positive integer').optional(),
-  photo: z.string().min(1, 'Photo is required').optional(),
+  profileImage: z.string().min(1, 'profileImage is required').optional(),
   inStock: z.boolean().optional(),
 })
 export { createProductsValidationSchema, updateProductsValidationSchema }

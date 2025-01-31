@@ -5,7 +5,7 @@ import { AuthService } from "./auth.service";
 
 const register = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-    const result = await AuthService.register(req.body);
+    const result = await AuthService.register(req.file,req.body);
     res.status(200).json({
         success: true,
         message: 'User created successfully',

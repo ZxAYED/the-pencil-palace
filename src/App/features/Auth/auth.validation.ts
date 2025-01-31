@@ -12,7 +12,7 @@ export const createUserValidation = z.object({
     phone: z.string().regex(phoneRegex, {
         message: "Invalid phone number. It must be a valid Bangladeshi number from Airtel, Robi, Banglalink, Teletalk, or Grameenphone.",
     }),
-    profileImg: z.string().url({ message: "Profile image must be a valid URL" }),
+    profileImage: z.string().url({ message: "Profile image must be a valid URL" }),
 });
 export const updateUserValidation = z.object({
     name: z.string({ message: "Name cannot be empty" }).optional(),
@@ -24,7 +24,7 @@ export const updateUserValidation = z.object({
     phone: z.string().regex(phoneRegex, {
         message: "Invalid phone number. It must be a valid Bangladeshi number from Airtel, Robi, Banglalink, Teletalk, or Grameenphone.",
     }).optional(),
-    profileImg: z.string().url({ message: "Profile image must be a valid URL" }).optional(),
+    profileImage: z.string().url({ message: "Profile image must be a valid URL" }).optional(),
 });
 
 export const loginUserValidation = z.object({

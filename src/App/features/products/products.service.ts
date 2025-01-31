@@ -1,10 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from "../../Error/AppError"
+import UploadImageToCloudinary from "../../utils/UploadImageToCloudinary";
 import { IProduct } from "./products.interface"
 import productsModel from "./products.model"
 
 
-const createProductIntoDb = async (payload: IProduct) => {
+const createProductIntoDb = async (file: any, payload: IProduct) => {
+
+    if (file) {
+        const imageName = `${payload?.name}+${new Date().getTime()}`;
+        const path = file?.path;
+        const uploadResponse = await UploadImageToCloudinary(imageName, path);
+        payload.profileImage = uploadResponse.url;
+    }
 
     const result = await productsModel.create(payload)
     return result

@@ -11,7 +11,7 @@ const userSchema = new Schema<IAuthRegister>({
     status: { type: String, enum: ['active', 'inactive'], required: true },
     address: { type: String, required: true },
     phone: { type: String, required: true },
-    profileImg: { type: String, required: true },
+    profileImage: { type: String, required: true },
 })
 userSchema.post('save', function (doc, next) {
     doc.password = '';

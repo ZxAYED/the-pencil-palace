@@ -19,7 +19,7 @@ const productsSchema = new Schema(
     },
     description: { type: String, required: true },
     quantity: { type: Number, required: true },
-    photo: { type: String, required: true },
+    profileImage: { type: String, required: true },
     inStock: { type: Boolean, required: true },
   },
   { timestamps: true },

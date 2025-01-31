@@ -10,7 +10,7 @@ export interface IProduct {
   | 'Technology'
   description: string
   quantity: number
-  photo: number
+  profileImage: string
   inStock: boolean
 }
 export interface ProductFilter {

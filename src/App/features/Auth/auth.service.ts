@@ -1,25 +1,47 @@
 import config from "../../config";
 import AppError from "../../Error/AppError";
+import UploadImageToCloudinary from "../../utils/UploadImageToCloudinary";
 import { IAuth, IAuthRegister } from "./auth.interface";
 import userModel from "./auth.model";
 import bcrypt from 'bcryptjs';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-const register = async (payload: IAuthRegister) => {
+
+
+
+
+const register = async (file: any, payload: IAuthRegister) => {
+
     const { email, password } = payload;
     const isUserExits = await userModel.findOne({ email });
+
+    if (file) {
+        const imageName = `${payload?.name}+${payload.email}`;
+        const path = file?.path;
+        const uploadResponse = await UploadImageToCloudinary(imageName, path);
+        payload.profileImage = uploadResponse.url;
+    }
+
     if (isUserExits) {
         throw new AppError(409, 'User already exists');
     }
+
     const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
     payload.password = hashedPassword;
     payload.passwordChangedAt = new Date();
     payload.role = 'user';
     payload.status = 'active';
     payload.isDeleted = false;
+
+
     const user = await userModel.create(payload);
     return user;
-}
+};
+
+export const AuthController = {
+    register,
+};
+
 const getAllUsersFromDB = async () => {
     const users = await userModel.find();
     return users;
