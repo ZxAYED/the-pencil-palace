@@ -5,7 +5,17 @@ export interface IAuth {
     password: string
     role?: 'admin' | 'user'
 }
+export interface IAuthRequestPasswordReset {
+    email: string
+}
+export interface IAuthChangePassword {
+    passwordChangedAt: Date
+    password: string
+    email: string
+    oldPassword: string,
+    newPassword: string,
 
+}
 export interface IAuthResponse {
     accessToken: string
     refreshToken: string
@@ -20,6 +30,8 @@ export interface IAuthRegister {
     status: 'active' | 'blocked';
     isDeleted: boolean;
     address: string,
-    profileImage: string
+    profileImage: string,
+    passwordResetExpires: string,
+    passwordResetToken: string
 }
 

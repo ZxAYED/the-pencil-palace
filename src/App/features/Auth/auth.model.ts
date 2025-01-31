@@ -12,11 +12,23 @@ const userSchema = new Schema<IAuthRegister>({
     address: { type: String, required: true },
     phone: { type: String, required: true },
     profileImage: { type: String, required: true },
+    passwordChangedAt: { type: Date, default: Date.now() },
+    passwordResetExpires: { type: String },
+    passwordResetToken: { type: String },
 })
-userSchema.post('save', function (doc, next) {
-    doc.password = '';
-    next();
-})
+userSchema.set('toJSON', {
+    transform: function (doc, ret) {
+        delete ret.password;
+        return ret;
+    },
+});
+
+
+// userSchema.pre('find', function (next) {
+//     this.find({ isDeleted: false });
+//     this.find({ status: 'active' });
+//     next();
+// })
 const userModel = model<IAuthRegister>('User', userSchema);
 
 export default userModel;

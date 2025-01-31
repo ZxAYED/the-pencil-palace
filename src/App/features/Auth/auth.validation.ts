@@ -13,6 +13,7 @@ export const createUserValidation = z.object({
         message: "Invalid phone number. It must be a valid Bangladeshi number from Airtel, Robi, Banglalink, Teletalk, or Grameenphone.",
     }),
     profileImage: z.string().url({ message: "Profile image must be a valid URL" }),
+    isPasswordMatch: z.string().min(6, { message: "Password must be at least 6 characters" }).optional(),
 });
 export const updateUserValidation = z.object({
     name: z.string({ message: "Name cannot be empty" }).optional(),
@@ -25,8 +26,13 @@ export const updateUserValidation = z.object({
         message: "Invalid phone number. It must be a valid Bangladeshi number from Airtel, Robi, Banglalink, Teletalk, or Grameenphone.",
     }).optional(),
     profileImage: z.string().url({ message: "Profile image must be a valid URL" }).optional(),
+    isPasswordMatch: z.string().min(6, { message: "Password must be at least 6 characters" }).optional(),
 });
-
+export const forgotPasswordValidation = z.object({
+    email: z.string().email({ message: "Invalid email format" }),
+    oldPassword: z.string().min(6, { message: "Password must be at least 6 characters" }),
+    newPassword: z.string().min(6, { message: "Password must be at least 6 characters" }),
+});
 export const loginUserValidation = z.object({
     email: z.string().email({ message: "Invalid email format" }),
     password: z.string().min(6, { message: "Password must be at least 6 characters" }),

@@ -5,21 +5,14 @@ import { AuthService } from "./auth.service";
 
 const register = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-    const result = await AuthService.register(req.file,req.body);
+    const result = await AuthService.register(req.file, req.body);
     res.status(200).json({
         success: true,
         message: 'User created successfully',
         data: result
     });
 });
-const getAllUsers = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const result = await AuthService.getAllUsersFromDB();
-    res.status(200).json({
-        success: true,
-        message: 'Users fetched successfully',
-        data: result
-    });
-})
+
 const login = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const result = await AuthService.login(req.body);
     console.log(result)
@@ -29,17 +22,33 @@ const login = CatchAsync(async (req: Request, res: Response, next: NextFunction)
         data: result
     });
 });
-const updateUser = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const result = await AuthService.updateUserIntoDb(req.params.id, req.body);
+
+const changePassword = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const result = await AuthService.changePassword(req.body);
     res.status(200).json({
         success: true,
-        message: 'User updated successfully',
+        message: 'Password updated successfully',
         data: result
     });
 })
-
+const requestPasswordReset = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const result = await AuthService.requestPasswordReset(req.body);
+    res.status(200).json({
+        success: true,
+        message: 'Password reset link  sent  to email successfully',
+        data: result
+    });
+})
+const resetPassword = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const result = await AuthService.resetPassword(req.query.token as string, req.body);
+    res.status(200).json({
+        success: true,
+        message: 'Password reset successfully',
+        data: result
+    });
+})
 export const AuthController = {
     register,
-    login, getAllUsers, updateUser
+    login, changePassword, requestPasswordReset, resetPassword
 }
 

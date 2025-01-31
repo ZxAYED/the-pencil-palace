@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Router } from "express";
 import { AuthController } from "./auth.controller";
-import { createUserValidation, loginUserValidation } from "./auth.validation";
+import { createUserValidation, forgotPasswordValidation, loginUserValidation } from "./auth.validation";
 import validateRequest from "../../utils/ValidateRequest";
-import auth from "../../middleware/auth";
+
 import upload from "../../utils/multer.config";
 
 const authRouter = Router();
@@ -14,9 +14,11 @@ authRouter.post('/register', validateRequest(createUserValidation), upload.singl
     // },
     AuthController.register);
 authRouter.post('/login', validateRequest(loginUserValidation), AuthController.login);
-authRouter.get('/users', auth('admin'), AuthController.getAllUsers);
+authRouter.post('/change-password', validateRequest(forgotPasswordValidation), AuthController.changePassword);
+authRouter.post('/request-password-reset', validateRequest(forgotPasswordValidation), AuthController.requestPasswordReset);
+authRouter.post('/reset-password', AuthController.resetPassword);
 
 
-authRouter.patch('/users/:id', AuthController.updateUser);
+
 
 export default authRouter;

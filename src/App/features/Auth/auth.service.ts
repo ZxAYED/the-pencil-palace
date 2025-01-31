@@ -1,13 +1,14 @@
+/* eslint-disable no-undef */
 import config from "../../config";
 import AppError from "../../Error/AppError";
 import UploadImageToCloudinary from "../../utils/UploadImageToCloudinary";
-import { IAuth, IAuthRegister } from "./auth.interface";
+import { IAuth, IAuthChangePassword, IAuthRegister, IAuthRequestPasswordReset } from "./auth.interface";
 import userModel from "./auth.model";
 import bcrypt from 'bcryptjs';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-
-
+import crypto from 'crypto';
+import sendResetPasswordEmail from "../../utils/nodeMailer.config";
 
 
 const register = async (file: any, payload: IAuthRegister) => {
@@ -38,9 +39,8 @@ const register = async (file: any, payload: IAuthRegister) => {
     return user;
 };
 
-export const AuthController = {
-    register,
-};
+
+
 
 const getAllUsersFromDB = async () => {
     const users = await userModel.find();
@@ -103,7 +103,80 @@ const updateUserIntoDb = async (userId: string, payload: Partial<IAuthRegister>)
     const user = await userModel.findByIdAndUpdate(userId, payload, { new: true, runValidators: true });
     return user;
 }
+const changePassword = async (payload: IAuthChangePassword) => {
+    const { email, oldPassword, newPassword } = payload;
+
+    const isUserExits = await userModel.findOne({ email });
+    if (!isUserExits) {
+        throw new AppError(404, 'User not found');
+    }
+    const isPasswordMatch = await bcrypt.compare(oldPassword, isUserExits.password);
+    if (!isPasswordMatch) {
+        throw new AppError(401, 'Password is incorrect');
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, Number(config.bcrypt_salt_rounds));
+    payload.password = hashedPassword;
+    payload.passwordChangedAt = new Date();
+    const user = await userModel.findByIdAndUpdate(isUserExits._id, payload, { new: true, runValidators: true });
+    return user;
+}
+
+
+
+const requestPasswordReset = async (email: IAuthRequestPasswordReset) => {
+
+    const user = await userModel.findOne({ email });
+    if (!user) {
+        throw new AppError(404, 'User not found');
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    await userModel.findByIdAndUpdate(user._id, {
+        passwordResetToken: resetTokenHash,
+        passwordResetExpires: Date.now() + 60 * 60 * 1000
+    });
+
+    await sendResetPasswordEmail(user.email, resetToken);
+
+    return { message: 'Password reset email sent' };
+};
+
+
+
+const resetPassword = async (token: string, payload: IAuthChangePassword) => {
+
+    const { newPassword } = payload
+
+    const hashedToken = crypto.createHash('sha256').update(token as string).digest('hex');
+
+    const user = await userModel.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+        throw new AppError(400, 'Token is invalid or has expired');
+    }
+
+    user.password = await bcrypt.hash(newPassword, Number(config.bcrypt_salt_rounds));
+    user.passwordResetToken = '';
+    user.passwordResetExpires = '';
+
+    await user.save();
+
+    return { message: 'Password reset successful' };
+};
+
+
+
+
+
+
+
 
 export const AuthService = {
-    register, login, getAllUsersFromDB, updateUserIntoDb
-}   
+    register, login, getAllUsersFromDB, updateUserIntoDb, changePassword, requestPasswordReset, resetPassword
+}
+

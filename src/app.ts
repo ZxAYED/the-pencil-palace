@@ -7,6 +7,7 @@ import NotFound from './App/Error/NotFound'
 import authRouter from './App/features/Auth/auth.routes'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
+import adminRouter from './App/features/admin/admin.routes'
 
 
 const app = express()
@@ -19,7 +20,7 @@ app.use(express.json())
 app.use('/api/products', productsRouter)
 app.use('/api/orders', orderRoutes)
 app.use('/api/auth', authRouter)
-
+app.use('/api/admin', adminRouter)
 
 
 
