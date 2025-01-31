@@ -5,7 +5,7 @@ import CatchAsync from '../../utils/CatchAsync';
 
 
 
-const createOrder = CatchAsync(async (req: Request, res: Response,) => {
+const createOrder = CatchAsync(async (req: Request, res: Response) => {
 
   const result = await orderService.createOrderIntoDb(req.body);
   res.status(200).json({
@@ -16,7 +16,7 @@ const createOrder = CatchAsync(async (req: Request, res: Response,) => {
   });
 })
 
-const getAllOrder = CatchAsync(async (req, res) => {
+const getAllOrder = CatchAsync(async (req: Request, res: Response) => {
   const result = await orderService.getAllOrderIntoDb()
   res.status(200).json({
     message: 'All items fetched successfully',
@@ -26,7 +26,7 @@ const getAllOrder = CatchAsync(async (req, res) => {
   })
 })
 
-const generateRevenue = CatchAsync(async (req, res) => {
+const generateRevenue = CatchAsync(async (req: Request, res: Response) => {
   const result = await orderService.generateRevenueFromDb()
   res.status(200).json({
     message: 'Revenue calculated successfully',
@@ -35,10 +35,17 @@ const generateRevenue = CatchAsync(async (req, res) => {
     data: result,
   })
 })
-
-
+const generateRevenueForUser = CatchAsync(async (req: Request, res: Response) => {
+  const result = await orderService.generateRevenueForUser(req.params.email)
+  res.status(200).json({
+    message: 'Revenue calculated successfully',
+    success: true,
+    status: 200,
+    data: result,
+  })
+})
 
 export const orderController = {
   createOrder,
-  generateRevenue, getAllOrder
+  generateRevenue, getAllOrder, generateRevenueForUser
 };

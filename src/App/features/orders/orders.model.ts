@@ -9,7 +9,7 @@ const orderSchema = new Schema(
       match: [/.+\.+\..+/, 'Please enter a valid email address'],
       maxlength: [100, 'Email cannot be longer than 100 characters'],
     },
-    product: {
+    productId: {
       type: String,
 
       required: [true, 'Product is required'],

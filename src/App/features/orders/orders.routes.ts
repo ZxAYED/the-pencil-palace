@@ -9,6 +9,7 @@ import auth from '../../middleware/auth'
 const orderRoutes = Router()
 orderRoutes.post('/', auth('user'), validateRequest(createOrderValidation), orderController.createOrder)
 orderRoutes.get('/revenue', auth('admin'), orderController.generateRevenue)
+orderRoutes.get('/revenue/:email', auth('user'), orderController.generateRevenueForUser)
 orderRoutes.get('/', auth('user'), validateRequest(updateOrderValidation), orderController.getAllOrder)
 
 

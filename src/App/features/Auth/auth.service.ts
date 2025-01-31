@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-undef */
 import config from "../../config";
 import AppError from "../../Error/AppError";
@@ -82,6 +83,7 @@ const login = async (payload: IAuth) => {
         (config.jwt_refresh_secret as string),
         { expiresIn: 5184000 });
 
+
     return { user, accessToken, refreshToken };
 }
 
@@ -135,7 +137,8 @@ const requestPasswordReset = async (email: IAuthRequestPasswordReset) => {
 
     await userModel.findByIdAndUpdate(user._id, {
         passwordResetToken: resetTokenHash,
-        passwordResetExpires: Date.now() + 60 * 60 * 1000
+        passwordResetExpires: Date.now() + 60 * 60 * 1000,
+        passwordChangedAt: new Date()
     });
 
     await sendResetPasswordEmail(user.email, resetToken);
@@ -169,6 +172,27 @@ const resetPassword = async (token: string, payload: IAuthChangePassword) => {
     return { message: 'Password reset successful' };
 };
 
+const refreshToken = async (token: string) => {
+    const decoded = jwt.verify(token, config.jwt_refresh_secret as string) as JwtPayload
+    const { userId, role, status, isDeleted, iat } = decoded
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+        throw new AppError(404, 'This user is not found !');
+    }
+
+
+    if (
+        user.passwordChangedAt &&
+        iat &&
+        (user.passwordChangedAt.getTime() / 1000 < iat)
+    ) {
+        throw new AppError(401, 'You are not authorized !');
+    }
+    const accessToken = jwt.sign({ userId, role, status, isDeleted }, config.jwt_access_secret as string, { expiresIn: 86400 })
+    return { accessToken }
+}
+
 
 
 
@@ -177,6 +201,6 @@ const resetPassword = async (token: string, payload: IAuthChangePassword) => {
 
 
 export const AuthService = {
-    register, login, getAllUsersFromDB, updateUserIntoDb, changePassword, requestPasswordReset, resetPassword
+    register, login, getAllUsersFromDB, updateUserIntoDb, changePassword, requestPasswordReset, resetPassword, refreshToken
 }
 

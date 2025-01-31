@@ -15,7 +15,7 @@ const userSchema = new Schema<IAuthRegister>({
     passwordChangedAt: { type: Date, default: Date.now() },
     passwordResetExpires: { type: String },
     passwordResetToken: { type: String },
-})
+}, { timestamps: true })
 userSchema.set('toJSON', {
     transform: function (doc, ret) {
         delete ret.password;

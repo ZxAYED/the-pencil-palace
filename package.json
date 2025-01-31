@@ -7,7 +7,6 @@
     "start": "node dist/server.js",
     "build": "tsc",
     "dev": "npx nodemon --watch src --exec \"npx ts-node --transpile-only src/server.ts\"",
-    "Build": "tsc",
     "lint:fix": "eslint src --fix",
     "lint": "eslint .",
     "prettier": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",

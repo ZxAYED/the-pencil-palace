@@ -4,7 +4,7 @@ import OrderModel from "./orders.model";
 
 
 const createOrderIntoDb = async (payload: IOrder) => {
-    const productData = await productsModel.findById(payload.product);
+    const productData = await productsModel.findById(payload.productId);
 
     if (!productData) {
         const result = {
@@ -29,7 +29,7 @@ const createOrderIntoDb = async (payload: IOrder) => {
         quantity: quantity,
         inStock: quantity > 0,
     };
-    await productsModel.findByIdAndUpdate(payload.product, updatedData);
+    await productsModel.findByIdAndUpdate(payload.productId, updatedData);
     const result = await OrderModel.create(payload);
     return result;
 }
@@ -68,6 +68,43 @@ const generateRevenueFromDb = async () => {
     }
 
 }
+const generateRevenueForUser = async (userEmail: string) => {
+    const result = await OrderModel.aggregate([
+
+        {
+            $match: { email: userEmail }
+        },
+
+        {
+            $addFields: {
+                total: { $multiply: ['$totalPrice', '$quantity'] }
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                totalRevenue: { $sum: '$total' }
+            }
+        }
+    ]);
+
+    if (result.length > 0) {
+        const totalRevenue = result[0].totalRevenue;
+        return {
+            message: 'Revenue calculated successfully',
+            success: true,
+            data: { totalRevenue },
+        };
+    } else {
+        return {
+            message: 'No revenue data found for this user',
+            success: true,
+            data: { totalRevenue: 0 },
+        };
+    }
+};
+
+
 const getAllOrderIntoDb = async () => {
     const result = await OrderModel.find()
     return result
@@ -75,5 +112,6 @@ const getAllOrderIntoDb = async () => {
 export const orderService = {
     createOrderIntoDb,
     generateRevenueFromDb,
+    generateRevenueForUser,
     getAllOrderIntoDb
 }

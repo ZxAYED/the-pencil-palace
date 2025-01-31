@@ -47,8 +47,18 @@ const resetPassword = CatchAsync(async (req: Request, res: Response, next: NextF
         data: result
     });
 })
+const refreshToken = CatchAsync(async (req: Request, res: Response) => {
+    const result = await AuthService.refreshToken(req.body.token)
+    res.status(200).json({
+        message: 'Token refreshed successfully',
+        success: true,
+        status: 200,
+        data: result,
+    })
+})
+
 export const AuthController = {
     register,
-    login, changePassword, requestPasswordReset, resetPassword
+    login, changePassword, requestPasswordReset, resetPassword, refreshToken
 }
 

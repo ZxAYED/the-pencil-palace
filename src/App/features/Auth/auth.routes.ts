@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AuthController } from "./auth.controller";
-import { createUserValidation, forgotPasswordValidation, loginUserValidation } from "./auth.validation";
+import { createUserValidation, forgotPasswordValidation, loginUserValidation, refreshTokenValidation } from "./auth.validation";
 import validateRequest from "../../utils/ValidateRequest";
 
 import upload from "../../utils/multer.config";
@@ -17,7 +17,7 @@ authRouter.post('/login', validateRequest(loginUserValidation), AuthController.l
 authRouter.post('/change-password', validateRequest(forgotPasswordValidation), AuthController.changePassword);
 authRouter.post('/request-password-reset', validateRequest(forgotPasswordValidation), AuthController.requestPasswordReset);
 authRouter.post('/reset-password', AuthController.resetPassword);
-
+authRouter.post('/refresh-token', validateRequest(refreshTokenValidation), AuthController.refreshToken);
 
 
 

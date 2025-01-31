@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import cloudinary from 'cloudinary';
 import config from '../config';
 import AppError from '../Error/AppError';
