@@ -1,71 +1,41 @@
 import { Request, Response } from 'express'
 import productsModel from './products.model'
+import { productsService } from './products.service'
 
-import { productsValidationSchema } from './products.validation'
-import { ProductFilter } from './products.interface'
 
 
 const createproduct = async (req: Request, res: Response) => {
-  try {
-    const payload = req.body
 
-    const validPaylod = productsValidationSchema.parse(payload)
-    const result = await productsModel.create(validPaylod)
-    res.json({
-      message: 'Product created successfully',
-      success: true,
-      data: result,
-    })
-  } catch (error) {
-    res.status(500).json({
-      message: 'Error while creating a products',
-      success: false,
-      status: 404,
-      error,
-    })
-  }
+  const result = await productsService.createProductIntoDb(req.body)
+  res.status(200).json({
+    message: 'Product created successfully',
+    status: true,
+    data: result,
+  })
+
+
 }
 const getAllproducts = async (req: Request, res: Response) => {
-  try {
-    const { name, brand, category } = req.query
-    const filter: { [key: string]: any } = {}
-    if (name) filter.name = name
-    if (brand) filter.brand = brand
-    if (category) filter.category = category
+  const result = await productsService.getAllProductsFromDb(req.query)
+  res.status(200).json({
+    message: 'Products retrieved successfully',
+    status: true,
+    data: result,
+  })
 
-    const products = await productsModel.find(filter)
-    res.status(200).json({
-      message: 'Products retrieved successfully',
-      status: true,
-      data: products,
-    })
-  } catch (error) {
-    res.status(500).json({
-      message: 'Error retrieving products',
-      success: false,
-      error,
-    })
-  }
+
 }
 
 const getSingleproduct = async (req: Request, res: Response) => {
-  try {
-    const payload = req.params.productId
-    // const validPaylod = productsValidationSchema.parse(payload)
-    const result = await productsModel.findById(payload)
-    res.json({
-      message: 'Product retrieved  successfully',
-      success: true,
-      data: result,
-    })
-  } catch (error) {
-    res.status(500).json({
-      message: 'Error while retrieved  a product',
-      success: false,
-      status: 500,
-      error,
-    })
-  }
+
+  const result = await productsService.getSingleProductFromDb(req.params.productId)
+  res.status(200).json({
+    message: 'Product retrieved successfully',
+    status: true,
+    data: result,
+  })
+
+
 }
 const updateProduct = async (req: Request, res: Response) => {
   try {
