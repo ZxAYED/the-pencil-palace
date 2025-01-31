@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-const validStatus = ["Pending", "Shipped", "Delivered", "Canceled"] as const;
-const validPaymentStatus = ['Pending', 'Paid', 'Cancelled'] as const;
+const validStatus = ["pending", "shipped", "delivered", "canceled"] as const;
+const validPaymentStatus = ['pending', 'paid', 'cancelled'] as const;
 
 const createOrderValidation = z.object({
     email: z.string().email({ message: "Invalid email format" }),
