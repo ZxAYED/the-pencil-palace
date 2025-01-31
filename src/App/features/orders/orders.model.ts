@@ -6,13 +6,23 @@ const orderSchema = new Schema(
     email: {
       type: String,
       required: [true, 'Email is required'],
-      match: [/.+\@.+\..+/, 'Please enter a valid email address'],
+      match: [/.+\.+\..+/, 'Please enter a valid email address'],
       maxlength: [100, 'Email cannot be longer than 100 characters'],
     },
     product: {
       type: String,
 
       required: [true, 'Product is required'],
+    },
+    status: {
+      type: String,
+      enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],
+      default: 'Pending',
+    },
+    isPaid: {
+      type: String,
+      enum: ['Pending', 'Paid', 'Cancelled'],
+      default: 'Pending',
     },
     quantity: {
       type: Number,

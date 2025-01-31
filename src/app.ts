@@ -1,8 +1,9 @@
-import express from 'express'
+import express, { ErrorRequestHandler } from 'express'
 import cors from 'cors'
 import productsRouter from './App/features/products/products.routes'
-
-import orderRoutes from './App/features/orders/orders.routeS'
+import globalErrorHandler from './App/Error/GlobalErrorHandlers'
+import orderRoutes from './App/features/orders/orders.routes'
+import NotFound from './App/Error/NotFound'
 
 
 
@@ -18,5 +19,8 @@ app.use('/api/orders', orderRoutes)
 app.get('/', (req, res) => {
   res.send('The Pencil Palace apiiiii is working at shei level')
 })
+
+app.use(globalErrorHandler as unknown as ErrorRequestHandler)
+app.use(NotFound as unknown as ErrorRequestHandler)
 
 export default app
