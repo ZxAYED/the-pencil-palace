@@ -13,28 +13,24 @@ import sendResetPasswordEmail from "../../utils/nodeMailer.config";
 
 
 const register = async (file: any, payload: IAuthRegister) => {
-
     const { email, password } = payload;
-    const isUserExits = await userModel.findOne({ email });
-
-    if (file) {
-        const imageName = `${payload?.name}+${payload.email}`;
-        const path = file?.path;
-        const uploadResponse = await UploadImageToCloudinary(imageName, path);
-        payload.profileImage = uploadResponse.url;
-    }
-
-    if (isUserExits) {
+    console.log(file, 'from authservice')
+    const isUserExists = await userModel.findOne({ email });
+    if (isUserExists) {
         throw new AppError(409, 'User already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
-    payload.password = hashedPassword;
+    if (file) {
+        const imageName = `${payload.name}-${payload.email}`;
+        const uploadedImageUrl = await UploadImageToCloudinary(imageName, file.buffer);
+        payload.profileImage = uploadedImageUrl.url;
+    }
+
+    payload.password = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
     payload.passwordChangedAt = new Date();
     payload.role = 'user';
     payload.status = 'active';
     payload.isDeleted = false;
-
 
     const user = await userModel.create(payload);
     return user;

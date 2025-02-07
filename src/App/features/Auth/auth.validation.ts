@@ -1,5 +1,5 @@
 import { z } from "zod";
-const phoneRegex = /^(01(3[0-9]|4[0-9]|5[0-9]|6[0-9]|7[0-9]|8[0-9]|9[0-9])\d{7})$/;
+
 
 
 export const createUserValidation = z.object({
@@ -9,12 +9,22 @@ export const createUserValidation = z.object({
     role: z.enum(["admin", "user"], { message: "Role must be either 'admin' or 'user'" }).default('user'),
     status: z.enum(["active", "blocked"], { message: "Status must be 'active' or 'blocked'" }).default('active'),
     address: z.string({ message: "Address is required" }),
-    phone: z.string().regex(phoneRegex, {
+    phone: z.string({
         message: "Invalid phone number. It must be a valid Bangladeshi number from Airtel, Robi, Banglalink, Teletalk, or Grameenphone.",
     }),
-    profileImage: z.string().url({ message: "Profile image must be a valid URL" }),
+    profileImage: z
+        .object({
+            filename: z.string(),
+            path: z.string(),
+            mimetype: z.string(),
+        })
+        .optional()
+        .refine(data => data?.mimetype?.startsWith("image/"), {
+            message: "Profile image must be a valid image file",
+        }),
     isPasswordMatch: z.string().min(6, { message: "Password must be at least 6 characters" }).optional(),
 });
+
 export const updateUserValidation = z.object({
     name: z.string({ message: "Name cannot be empty" }).optional(),
     email: z.string().email({ message: "Invalid email format" }).optional(),
@@ -22,10 +32,12 @@ export const updateUserValidation = z.object({
     role: z.enum(["admin", "user"], { message: "Invalid role" }).optional(),
     status: z.enum(["active", "blocked"], { message: "Invalid status" }).optional(),
     address: z.string({ message: "Address cannot be empty" }).optional(),
-    phone: z.string().regex(phoneRegex, {
+    phone: z.string({
         message: "Invalid phone number. It must be a valid Bangladeshi number from Airtel, Robi, Banglalink, Teletalk, or Grameenphone.",
     }).optional(),
-    profileImage: z.string().url({ message: "Profile image must be a valid URL" }).optional(),
+    profileImage: z
+        .instanceof(File, { message: "Profile image must be a valid file" })
+        .optional(),
     isPasswordMatch: z.string().min(6, { message: "Password must be at least 6 characters" }).optional(),
 });
 export const forgotPasswordValidation = z.object({

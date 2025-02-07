@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import cloudinary from 'cloudinary';
-import config from '../config';
+import fs from 'fs';
+
 import AppError from '../Error/AppError';
+import config from '../config';
 
 cloudinary.v2.config({
     cloud_name: config.cloudinary_name,
@@ -9,23 +10,42 @@ cloudinary.v2.config({
     api_secret: config.cloudinary_api_secret,
 });
 
-const UploadImageToCloudinary = async (imageName: string, file: any) => {
+const UploadImageToCloudinary = async (imageName: string, filePath: string) => {
+    console.log("File path received:", filePath);
+
     return new Promise<{ message: string; url: string }>((resolve, reject) => {
+        if (!filePath) {
+            reject(new AppError(400, "File path is missing"));
+            return;
+        }
+
         const uploadStream = cloudinary.v2.uploader.upload_stream(
             { public_id: imageName.trim() },
             (error, result) => {
                 if (error) {
-                    console.log(error);
-                    reject(new AppError(500, 'Error uploading image'));
+                    console.error('Cloudinary Upload Error:', error);
+                    reject(new AppError(500, 'Error uploading image to Cloudinary'));
+                    return;
                 }
+
                 if (result) {
-                    resolve({ message: 'Image uploaded successfully', url: result?.secure_url });
+
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            console.error('Error deleting file:', err);
+                        } else {
+                            console.log('Local file deleted successfully');
+                        }
+                    });
+
+                    resolve({ message: 'Image uploaded successfully', url: result.secure_url });
                 }
             }
         );
 
 
-        uploadStream.end(file);
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(uploadStream);
     });
 };
 

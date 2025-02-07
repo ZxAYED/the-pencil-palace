@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema, Types, model } from 'mongoose'
 import IOrder from './orders.interface'
 
 const orderSchema = new Schema(
@@ -9,28 +9,56 @@ const orderSchema = new Schema(
       match: [/.+\.+\..+/, 'Please enter a valid email address'],
       maxlength: [100, 'Email cannot be longer than 100 characters'],
     },
-    productId: {
-      type: String,
-
-      required: [true, 'Product is required'],
-    },
+    products: [{
+      product: {
+        type: Types.ObjectId,
+        ref: 'Product',
+      },
+      quantity: {
+        type: Number,
+        required: [true, 'Quantity is required'],
+        min: [1, 'Quantity cannot be less than 1'],
+        max: [100, 'Quantity cannot be more than 100'],
+        default: 1,
+      },
+    }],
     status: {
       type: String,
-      enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],
+      enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
       default: 'Pending',
     },
-    isPaid: {
-      type: String,
-      enum: ['Pending', 'Paid', 'Cancelled'],
-      default: 'Pending',
+    payment: {
+      status: {
+        type: String,
+        enum: ['Pending', 'Paid', 'Initiated', 'Cancelled', 'Failed'],
+        default: 'Pending',
+      },
+      OrderId: {
+        type: String,
+        default: '',
+      },
+      sp_code: {
+        type: Number,
+        default: 0,
+      },
+      sp_message: {
+        type: String,
+        default: '',
+      },
+      method: {
+        type: String,
+        default: '',
+      },
+      date_time: {
+        type: String,
+        default: '',
+      },
+      bank_status: {
+        type: String,
+        default: '',
+      },
     },
-    quantity: {
-      type: Number,
-      required: [true, 'Quantity is required'],
-      min: [1, 'Quantity cannot be less than 1'],
-      max: [100, 'Quantity cannot be more than 100'],
-      default: 1,
-    },
+
     totalPrice: {
       type: Number,
       required: [true, 'Total price is required'],

@@ -11,11 +11,13 @@ const userSchema = new Schema<IAuthRegister>({
     status: { type: String, enum: ['active', 'inactive'], required: true },
     address: { type: String, required: true },
     phone: { type: String, required: true },
-    profileImage: { type: String, required: true },
+    profileImage: { type: String },
     passwordChangedAt: { type: Date, default: Date.now() },
     passwordResetExpires: { type: String },
     passwordResetToken: { type: String },
 }, { timestamps: true })
+
+
 userSchema.set('toJSON', {
     transform: function (doc, ret) {
         delete ret.password;

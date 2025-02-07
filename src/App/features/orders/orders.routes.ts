@@ -11,6 +11,8 @@ orderRoutes.post('/', auth('user'), validateRequest(createOrderValidation), orde
 orderRoutes.get('/revenue', auth('admin'), orderController.generateRevenue)
 orderRoutes.get('/revenue/:email', auth('user'), orderController.generateRevenueForUser)
 orderRoutes.get('/', auth('user'), validateRequest(updateOrderValidation), orderController.getAllOrder)
-
+orderRoutes.delete('/:id', auth('user'), orderController.cancelOrder)
+orderRoutes.post('/payment', auth('user'), orderController.makePayment)
+orderRoutes.get('/payment/verify-payment', auth('user'), orderController.verifyPayment)
 
 export default orderRoutes

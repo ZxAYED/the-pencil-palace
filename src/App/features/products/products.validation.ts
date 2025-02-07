@@ -16,6 +16,7 @@ const createProductsValidationSchema = z.object({
   profileImage: z.string().min(1, 'profileImage is required'),
   inStock: z.boolean(),
   isFeatured: z.boolean(),
+  rating: z.number().optional()
 })
 
 const updateProductsValidationSchema = z.object({
@@ -34,5 +35,6 @@ const updateProductsValidationSchema = z.object({
   profileImage: z.string().min(1, 'profileImage is required').optional(),
   inStock: z.boolean().optional(),
   isFeatured: z.boolean().optional(),
+  rating: z.number().optional()
 })
 export { createProductsValidationSchema, updateProductsValidationSchema }

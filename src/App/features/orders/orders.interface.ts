@@ -1,8 +1,14 @@
+import { Types } from "mongoose"
+
 interface IOrder {
   email: string
-  productId: string
-  quantity: number
+  products: {
+    product: Types.ObjectId,
+    quantity: number
+  }[]
   totalPrice: number
+
 }
+
 
 export default IOrder

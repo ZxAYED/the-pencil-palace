@@ -4,15 +4,26 @@ import { createUserValidation, forgotPasswordValidation, loginUserValidation, re
 import validateRequest from "../../utils/ValidateRequest";
 
 import upload from "../../utils/multer.config";
+import AppError from "../../Error/AppError";
 
 const authRouter = Router();
 
-authRouter.post('/register', validateRequest(createUserValidation), upload.single('profileImage'),
-    // (req: Request, res: Response, next: NextFunction) => {
-    //     req.body = JSON.parse(req.body.data);
-    //     next();
-    // },
-    AuthController.register);
+
+authRouter.post(
+    '/register',
+    upload.single('profileImage'),
+    (req, res, next) => {
+        req.body.profileImage = req?.file;
+        if (!req.body || !req.file) {
+            throw new AppError(400, 'Missing required fields or file');
+        }
+
+        next();
+    },
+    validateRequest(createUserValidation),
+    AuthController.register
+);
+
 authRouter.post('/login', validateRequest(loginUserValidation), AuthController.login);
 authRouter.post('/change-password', validateRequest(forgotPasswordValidation), AuthController.changePassword);
 authRouter.post('/request-password-reset', validateRequest(forgotPasswordValidation), AuthController.requestPasswordReset);

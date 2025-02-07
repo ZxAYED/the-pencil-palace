@@ -18,4 +18,10 @@ export default {
   email_user: process.env.CONFIG_EMAIL_USER,
   email_pass: process.env.CONFIG_EMAIL_PASS,
   base_url: process.env.BASE_URL,
+  SP_USERNAME: process.env.SP_USERNAME,
+  SP_PASSWORD: process.env.SP_PASSWORD,
+  SP_PREFIX: process.env.SP_PREFIX,
+  SP_ENDPOINT: process.env.SP_ENDPOINT,
+  SP_RETURN_URL: process.env.SP_RETURN_URL,
+  DB_FILE: process.env.DB_FILE,
 }

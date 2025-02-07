@@ -22,6 +22,7 @@ const productsSchema = new Schema(
     profileImage: { type: String, required: true },
     inStock: { type: Boolean, required: true },
     isFeatured: { type: Boolean, required: true },
+    rating: { type: Number },
   },
   { timestamps: true },
 )

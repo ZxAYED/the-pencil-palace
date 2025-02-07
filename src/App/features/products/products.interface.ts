@@ -12,7 +12,8 @@ export interface IProduct {
   quantity: number
   profileImage: string
   inStock: boolean,
-  isFeatured: boolean
+  isFeatured: boolean,
+  rating: number
 }
 export interface ProductFilter {
   name?: string;
