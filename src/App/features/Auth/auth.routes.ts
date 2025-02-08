@@ -13,6 +13,7 @@ authRouter.post(
     '/register',
     upload.single('profileImage'),
     (req, res, next) => {
+
         req.body.profileImage = req?.file;
         if (!req.body || !req.file) {
             throw new AppError(400, 'Missing required fields or file');

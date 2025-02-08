@@ -12,16 +12,11 @@ export const createUserValidation = z.object({
     phone: z.string({
         message: "Invalid phone number. It must be a valid Bangladeshi number from Airtel, Robi, Banglalink, Teletalk, or Grameenphone.",
     }),
-    profileImage: z
-        .object({
-            filename: z.string(),
-            path: z.string(),
-            mimetype: z.string(),
-        })
-        .optional()
-        .refine(data => data?.mimetype?.startsWith("image/"), {
-            message: "Profile image must be a valid image file",
-        }),
+    profileImage: z.object({
+        filename: z.string().optional(),
+        path: z.string().optional(),
+        mimetype: z.string().optional(),
+    }).optional(),
     isPasswordMatch: z.string().min(6, { message: "Password must be at least 6 characters" }).optional(),
 });
 
@@ -35,9 +30,11 @@ export const updateUserValidation = z.object({
     phone: z.string({
         message: "Invalid phone number. It must be a valid Bangladeshi number from Airtel, Robi, Banglalink, Teletalk, or Grameenphone.",
     }).optional(),
-    profileImage: z
-        .instanceof(File, { message: "Profile image must be a valid file" })
-        .optional(),
+    profileImage: z.object({
+        filename: z.string().optional(),
+        path: z.string().optional(),
+        mimetype: z.string().optional(),
+    }).optional(),
     isPasswordMatch: z.string().min(6, { message: "Password must be at least 6 characters" }).optional(),
 });
 export const forgotPasswordValidation = z.object({

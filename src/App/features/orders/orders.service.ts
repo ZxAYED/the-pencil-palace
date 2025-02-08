@@ -135,7 +135,6 @@ const makePaymentIntoDb = async (payload: PaymentRequest, clientIp: string): Pro
     }
 
     const result = await makePayment(surjoPayload) as PaymentResponse
-
     if (result?.transactionStatus) {
         await OrderModel.findByIdAndUpdate(payload.order_id, { payment: { status: 'Initiated', OrderId: result.sp_order_id } }, { new: true, runValidators: true })
     }
