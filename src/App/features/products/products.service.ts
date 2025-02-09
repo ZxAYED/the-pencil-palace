@@ -8,10 +8,11 @@ import productsModel from "./products.model"
 const createProductIntoDb = async (file: any, payload: IProduct) => {
 
     if (file) {
-        const imageName = `${payload?.name}+${new Date().getTime()}`;
-        const path = file?.path;
+        const imageName = `${payload?.name}+${Date.now()}`;
+        const path = file?.buffer;
         const uploadResponse = await UploadImageToCloudinary(imageName, path);
         payload.profileImage = uploadResponse.url;
+
     }
 
     const result = await productsModel.create(payload)
@@ -38,14 +39,34 @@ const getSingleProductFromDb = async (payload: string) => {
 
 }
 
-const updateProductIntoDb = async (payload: string, data: IProduct) => {
-    const findProduct = await productsModel.findById(payload)
+const updateProductIntoDb = async (payload: string, data: IProduct, file: any) => {
+    const findProduct = await productsModel.findById(payload);
     if (!findProduct) {
-        throw new AppError(404, 'Product not found')
+        throw new AppError(404, 'Product not found');
     }
-    const product = await productsModel.findByIdAndUpdate(payload, data, { new: true, runValidators: true })
-    return product
-}
+
+    if (file) {
+        const imageName = `${data?.name}_${Date.now()}`;
+        const fileBuffer = file?.buffer;
+
+        try {
+            const uploadResponse = await UploadImageToCloudinary(imageName, fileBuffer);
+            data.profileImage = uploadResponse.url;
+        } catch (error) {
+            console.log(error)
+            throw new AppError(500, 'Failed to upload image');
+
+        }
+    }
+
+    const product = await productsModel.findByIdAndUpdate(payload, data, {
+        new: true,
+        runValidators: true,
+    });
+
+    return product;
+};
+
 
 const deleteProductIntoDb = async (payload: string) => {
     const findProduct = await productsModel.findById(payload)

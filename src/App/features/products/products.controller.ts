@@ -38,7 +38,7 @@ const updateProduct = CatchAsync(async (req: Request, res: Response) => {
 
   const payload = req.params.productId
   const data = req.body
-  const result = await productsService.updateProductIntoDb(payload, data)
+  const result = await productsService.updateProductIntoDb(payload, data, req.file)
   res.status(200).json({
     message: 'Product updated  successfully',
     success: true,

@@ -11,7 +11,7 @@ const userSchema = new Schema<IAuthRegister>({
     status: { type: String, enum: ['active', 'inactive'], required: true },
     address: { type: String, required: true },
     phone: { type: String, required: true },
-    profileImage: { type: String },
+    profileImage: { type: String, required: true },
     passwordChangedAt: { type: Date, default: Date.now() },
     passwordResetExpires: { type: String },
     passwordResetToken: { type: String },

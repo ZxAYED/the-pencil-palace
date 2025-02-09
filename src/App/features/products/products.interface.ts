@@ -13,7 +13,8 @@ export interface IProduct {
   profileImage: string
   inStock: boolean,
   isFeatured: boolean,
-  rating: number
+  rating: number,
+  features: string
 }
 export interface ProductFilter {
   name?: string;
