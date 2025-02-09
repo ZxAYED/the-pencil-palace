@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import CatchAsync from "../../utils/CatchAsync";
 import { AdminService } from "./admin.service";
-import { AuthService } from "../Auth/auth.service";
 
 const updateUser = CatchAsync(async (req: Request, res: Response) => {
+    console.log(req.params.id, req.body, 'from controller')
     const result = await AdminService.updateUserIntoDb(req.params.id, req.body);
     res.status(200).json({
         success: true,
@@ -12,7 +12,7 @@ const updateUser = CatchAsync(async (req: Request, res: Response) => {
     })
 })
 const getAllUsers = CatchAsync(async (req: Request, res: Response) => {
-    const result = await AuthService.getAllUsersFromDB();
+    const result = await AdminService.getAllUsersFromDb();
     res.status(200).json({
         success: true,
         message: 'Users fetched successfully',

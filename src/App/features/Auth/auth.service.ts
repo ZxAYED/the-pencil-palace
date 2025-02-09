@@ -7,15 +7,15 @@ import { IAuth, IAuthChangePassword, IAuthRegister, IAuthRequestPasswordReset } 
 import userModel from "./auth.model";
 import bcrypt from 'bcryptjs';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-
 import crypto from 'crypto';
 import sendResetPasswordEmail from "../../utils/nodeMailer.config";
 
 
 const register = async (file: any, payload: IAuthRegister) => {
     const { email, password } = payload;
-    console.log(file, 'from authservice')
-    const isUserExists = await userModel.findOne({ email });
+    const UserEmail = email.toLowerCase();
+    payload.email = UserEmail;
+    const isUserExists = await userModel.findOne({ email: UserEmail });
     if (isUserExists) {
         throw new AppError(409, 'User already exists');
     }
@@ -39,14 +39,13 @@ const register = async (file: any, payload: IAuthRegister) => {
 
 
 
-const getAllUsersFromDB = async () => {
-    const users = await userModel.find();
-    return users;
-}
+
 
 const login = async (payload: IAuth) => {
     const { email, password } = payload;
-    const user = await userModel.findOne({ email });
+    const UserEmail = email.toLowerCase();
+    payload.email = UserEmail;
+    const user = await userModel.findOne({ email: UserEmail });
     if (!user) {
         throw new AppError(404, 'User not found');
     }
@@ -83,31 +82,16 @@ const login = async (payload: IAuth) => {
     return { user, accessToken, refreshToken };
 }
 
-const updateUserIntoDb = async (userId: string, payload: Partial<IAuthRegister>) => {
-    const isUserExits = await userModel.findOne({ email: payload.email });
-    if (!isUserExits) {
-        throw new AppError(404, 'User not found');
-    }
-    if (isUserExits.isDeleted) {
-        throw new AppError(403, 'This user is already deleted !');
-    }
-    if (isUserExits.status === 'blocked') {
-        throw new AppError(403, 'This user is already blocked !');
-    }
-    if (payload.role || payload.isDeleted && isUserExits.role === 'user') {
-        throw new AppError(403, 'You are not authorized to update this user !');
 
-    }
-    const user = await userModel.findByIdAndUpdate(userId, payload, { new: true, runValidators: true });
-    return user;
-}
 const changePassword = async (payload: IAuthChangePassword) => {
     const { email, oldPassword, newPassword } = payload;
-
-    const isUserExits = await userModel.findOne({ email });
+    const UserEmail = email.toLowerCase();
+    payload.email = UserEmail;
+    const isUserExits = await userModel.findOne({ email: UserEmail });
     if (!isUserExits) {
         throw new AppError(404, 'User not found');
     }
+
     const isPasswordMatch = await bcrypt.compare(oldPassword, isUserExits.password);
     if (!isPasswordMatch) {
         throw new AppError(401, 'Password is incorrect');
@@ -121,11 +105,15 @@ const changePassword = async (payload: IAuthChangePassword) => {
 
 
 
-const requestPasswordReset = async (email: IAuthRequestPasswordReset) => {
-
-    const user = await userModel.findOne({ email });
+const requestPasswordReset = async (payload: IAuthRequestPasswordReset) => {
+    const { email } = payload;
+    const UserEmail = email.toLowerCase();
+    payload.email = UserEmail;
+    const user = await userModel.findOne({ email: UserEmail });
     if (!user) {
+
         throw new AppError(404, 'User not found');
+
     }
 
     const resetToken = crypto.randomBytes(32).toString('hex');
@@ -197,6 +185,6 @@ const refreshToken = async (token: string) => {
 
 
 export const AuthService = {
-    register, login, getAllUsersFromDB, updateUserIntoDb, changePassword, requestPasswordReset, resetPassword, refreshToken
+    register, login, changePassword, requestPasswordReset, resetPassword, refreshToken
 }
 

@@ -17,7 +17,12 @@ productsRouter.post(
         req.body.price = parseFloat(req.body.price);
         req.body.quantity = parseInt(req.body.quantity, 10);
         req.body.rating = parseFloat(req.body.rating);
-        req.body.isFeatured = req.body.isFeatured === 'true';
+        if (req.body.isFeatured) {
+            req.body.isFeatured = req.body.isFeatured === 'true';
+        }
+        if (req.body.inStock) {
+            req.body.inStock = req.body.inStock === 'true';
+        }
         if (!req.body || !req.file) {
             return next(new AppError(400, 'Missing required fields or file'));
         }
@@ -38,8 +43,12 @@ productsRouter.patch('/:productId', auth('admin'), upload.single('profileImage')
     req.body.price = parseFloat(req.body.price);
     req.body.quantity = parseInt(req.body.quantity, 10);
     req.body.rating = parseFloat(req.body.rating)
-    req.body.isFeatured = req.body.isFeatured === 'true';
-    req.body.inStock = req.body.inStock === 'true';
+    if (req.body.isFeatured) {
+        req.body.isFeatured = req.body.isFeatured === 'true';
+    }
+    if (req.body.inStock) {
+        req.body.inStock = req.body.inStock === 'true';
+    }
     req.body.profileImage = req?.file;
     next();
 }, validateRequest(updateProductsValidationSchema), productsController.updateProduct)
