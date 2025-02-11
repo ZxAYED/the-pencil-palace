@@ -47,4 +47,12 @@ const updateProductsValidationSchema = z.object({
   rating: z.number().optional(),
   features: z.string().optional()
 })
-export { createProductsValidationSchema, updateProductsValidationSchema }
+
+const addToCartValidationSchema = z.object({
+  userEmail: z.string(),
+  productId: z.string(),
+  quantity: z.number().int().min(1, 'Quantity must be a positive integer'),
+  total: z.number(),
+})
+
+export { createProductsValidationSchema, updateProductsValidationSchema, addToCartValidationSchema }

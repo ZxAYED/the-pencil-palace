@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { IProduct } from './products.interface'
+import { ICart, IProduct } from './products.interface'
 
 const productsSchema = new Schema(
   {
@@ -27,7 +27,35 @@ const productsSchema = new Schema(
   },
   { timestamps: true },
 )
+const cartSchema = new Schema(
+  {
+    productId: {
+      type: String,
+      required: true,
+      ref: 'products'
+    },
+    userEmail: {
+      type: String,
+      required: true,
 
-const productsModel = model<IProduct>('products', productsSchema)
+    },
+    userId: {
+      type: String,
+      required: true,
+      ref: 'User',
+    },
+    quantity: {
+      type: Number,
+      required: true
+    },
+    total: {
+      type: Number,
+      required: true
+    },
+  },
+  { timestamps: true },
+)
+export const productsModel = model<IProduct>('products', productsSchema)
+export const cartModel = model<ICart>('cart', cartSchema)
 
-export default productsModel
+

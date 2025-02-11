@@ -59,10 +59,36 @@ const deleteProduct = CatchAsync(async (req: Request, res: Response) => {
 
 })
 
+const addToCart = CatchAsync(async (req: Request, res: Response) => {
+  const result = await productsService.addToCart(req.body)
+  res.status(200).json({
+    message: 'Product added to cart successfully',
+    data: result,
+  })
+})
+
+const getCart = CatchAsync(async (req: Request, res: Response) => {
+  const result = await productsService.getCart(req.params.userEmail)
+  res.status(200).json({
+    message: 'Cart retrieved successfully',
+    data: result,
+  })
+})
+const deleteCart = CatchAsync(async (req: Request, res: Response) => {
+
+  const result = await productsService.deleteCart(req.params.id)
+  res.status(200).json({
+    message: 'Cart deleted successfully',
+    data: result,
+  })
+})
 export const productsController = {
   createproduct,
   getAllproducts,
   getSingleproduct,
   updateProduct,
   deleteProduct,
+  addToCart,
+  getCart,
+  deleteCart
 }

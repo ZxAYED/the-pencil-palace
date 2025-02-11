@@ -1,7 +1,7 @@
 import { Router } from "express"
 import { productsController } from "./products.controller"
 import validateRequest from "../../utils/ValidateRequest"
-import { createProductsValidationSchema, updateProductsValidationSchema } from "./products.validation"
+import { addToCartValidationSchema, createProductsValidationSchema, updateProductsValidationSchema } from "./products.validation"
 import auth from "../../middleware/auth"
 import upload from "../../utils/multer.config"
 import AppError from "../../Error/AppError"
@@ -34,10 +34,9 @@ productsRouter.post(
     productsController.createproduct
 );
 
+productsRouter.get('/', productsController.getAllproducts)
 
-productsRouter.get('/', auth('admin'), productsController.getAllproducts)
-
-productsRouter.get('/:productId', auth('admin'), productsController.getSingleproduct)
+productsRouter.get('/:productId', productsController.getSingleproduct)
 
 productsRouter.patch('/:productId', auth('admin'), upload.single('profileImage'), (req, res, next) => {
     req.body.price = parseFloat(req.body.price);
@@ -54,5 +53,13 @@ productsRouter.patch('/:productId', auth('admin'), upload.single('profileImage')
 }, validateRequest(updateProductsValidationSchema), productsController.updateProduct)
 
 productsRouter.delete('/:productId', auth('admin'), productsController.deleteProduct)
+
+
+
+productsRouter.post('/cart', auth('user'), validateRequest(addToCartValidationSchema), productsController.addToCart)
+productsRouter.get('/cart/:userEmail', auth('user'), productsController.getCart)
+productsRouter.delete('/cart/:id', auth('user'), productsController.deleteCart)
+
+
 
 export default productsRouter

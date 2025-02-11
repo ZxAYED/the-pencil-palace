@@ -16,6 +16,13 @@ export interface IProduct {
   rating: number,
   features: string
 }
+export interface ICart {
+  productId: string;
+  userEmail: string;
+  quantity: number;
+  userId: string;
+  total: number
+}
 export interface ProductFilter {
   name?: string;
   brand?: string;

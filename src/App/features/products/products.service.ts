@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from "../../Error/AppError"
+import QueryBuilder from "../../utils/QueryBuilder";
 import UploadImageToCloudinary from "../../utils/UploadImageToCloudinary";
-import { IProduct } from "./products.interface"
-import productsModel from "./products.model"
+import { ICart, IProduct } from "./products.interface"
+    ;
+import { cartModel, productsModel } from "./products.model";
+
 
 
 const createProductIntoDb = async (file: any, payload: IProduct) => {
@@ -21,16 +24,24 @@ const createProductIntoDb = async (file: any, payload: IProduct) => {
 }
 
 
-const getAllProductsFromDb = async (payload: any) => {
+const getAllProductsFromDb = async (query: any) => {
 
-    const { name, brand, category } = payload
-    const filter: { [key: string]: unknown } = {}
-    if (name) filter.name = name
-    if (brand) filter.brand = brand
-    if (category) filter.category = category
+    const SearchableFields = ['name', 'brand', 'category', 'description']
 
-    const products = await productsModel.find(filter)
-    return products
+    const productsQuery = new QueryBuilder(
+        productsModel.find(), query)
+        .search(SearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+
+
+    const result = await productsQuery.modelQuery;
+
+
+    return result
 
 }
 const getSingleProductFromDb = async (payload: string) => {
@@ -40,10 +51,6 @@ const getSingleProductFromDb = async (payload: string) => {
 }
 
 const updateProductIntoDb = async (payload: string, data: IProduct, file: any) => {
-    const findProduct = await productsModel.findById(payload);
-    if (!findProduct) {
-        throw new AppError(404, 'Product not found');
-    }
 
     if (file) {
         const imageName = `${data?.name}_${Date.now()}`;
@@ -76,10 +83,30 @@ const deleteProductIntoDb = async (payload: string) => {
     const product = await productsModel.findByIdAndDelete(payload)
     return product
 }
+
+const addToCart = async (payload: ICart) => {
+    const product = await cartModel.create(payload)
+    return product
+}
+const deleteCart = async (payload: string) => {
+    const product = await cartModel.findByIdAndDelete(payload)
+    return product
+}
+
+
+const getCart = async (userEmail: string) => {
+
+    const product = await cartModel.find({ userEmail }).populate('productId').populate('userId')
+    return product
+}
+
 export const productsService = {
     createProductIntoDb,
     getAllProductsFromDb,
     getSingleProductFromDb,
     updateProductIntoDb,
-    deleteProductIntoDb
+    deleteProductIntoDb,
+    getCart,
+    addToCart,
+    deleteCart
 }

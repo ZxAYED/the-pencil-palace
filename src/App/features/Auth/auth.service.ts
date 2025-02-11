@@ -15,7 +15,7 @@ const register = async (file: any, payload: IAuthRegister) => {
     const { email, password } = payload;
     const UserEmail = email.toLowerCase();
     payload.email = UserEmail;
-    const isUserExists = await userModel.findOne({ email: UserEmail });
+    const isUserExists = await userModel.findOne({ email });
     if (isUserExists) {
         throw new AppError(409, 'User already exists');
     }
@@ -107,8 +107,10 @@ const changePassword = async (payload: IAuthChangePassword) => {
 
 const requestPasswordReset = async (payload: IAuthRequestPasswordReset) => {
     const { email } = payload;
+
     const UserEmail = email.toLowerCase();
-    payload.email = UserEmail;
+
+
     const user = await userModel.findOne({ email: UserEmail });
     if (!user) {
 
@@ -132,7 +134,7 @@ const requestPasswordReset = async (payload: IAuthRequestPasswordReset) => {
 
 
 
-const resetPassword = async (token: string, payload: IAuthChangePassword) => {
+const resetPassword = async (token: string, payload: { newPassword: string }) => {
 
     const { newPassword } = payload
 

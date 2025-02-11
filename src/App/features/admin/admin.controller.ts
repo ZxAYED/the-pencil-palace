@@ -3,7 +3,7 @@ import CatchAsync from "../../utils/CatchAsync";
 import { AdminService } from "./admin.service";
 
 const updateUser = CatchAsync(async (req: Request, res: Response) => {
-    console.log(req.params.id, req.body, 'from controller')
+
     const result = await AdminService.updateUserIntoDb(req.params.id, req.body);
     res.status(200).json({
         success: true,

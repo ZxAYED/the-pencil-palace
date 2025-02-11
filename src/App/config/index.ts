@@ -24,4 +24,6 @@ export default {
   SP_ENDPOINT: process.env.SP_ENDPOINT,
   SP_RETURN_URL: process.env.SP_RETURN_URL,
   DB_FILE: process.env.DB_FILE,
+  appPassword: process.env.APP_PASSWORD,
+  appGmail: process.env.APP_GMAIL,
 }

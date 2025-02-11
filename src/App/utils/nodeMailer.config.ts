@@ -5,8 +5,8 @@ const sendResetPasswordEmail = async (email: string, resetToken: string) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: config.email_user,
-            pass: config.email_pass,
+            user: config.appGmail,
+            pass: config.appPassword,
         },
     });
     const resetURL = `${config.base_url}/reset-password?token=${resetToken}`;
@@ -16,7 +16,7 @@ const sendResetPasswordEmail = async (email: string, resetToken: string) => {
         to: email,
         subject: 'Password Reset Request',
         html: `
-      <h3>Password Reset</h3>
+      <h3>Password Reset From The Pencil Palace</h3>
       <p>Please click the link below to reset your password:</p>
       <a href="${resetURL}">Reset Password</a>
       <p>This link will expire in 1 hour.</p>
