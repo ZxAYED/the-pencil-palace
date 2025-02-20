@@ -1,18 +1,42 @@
 import { Router } from 'express'
-import { orderController } from './orders.controller'
-import validateRequest from '../../utils/ValidateRequest'
-import { createOrderValidation, updateOrderValidation } from './orders.validation'
 import auth from '../../middleware/auth'
+import validateRequest from '../../utils/ValidateRequest'
+import { orderController } from './orders.controller'
+import { addToCartValidation, orderValidation } from './orders.validation'
 
 
 
 const orderRoutes = Router()
-orderRoutes.post('/', auth('user'), validateRequest(createOrderValidation), orderController.createOrder)
-orderRoutes.get('/revenue', auth('admin'), orderController.generateRevenue)
-orderRoutes.get('/revenue/:email', auth('user'), orderController.generateRevenueForUser)
-orderRoutes.get('/', auth('user'), validateRequest(updateOrderValidation), orderController.getAllOrder)
-orderRoutes.delete('/:id', auth('user'), orderController.cancelOrder)
+
+
+
+orderRoutes.post('/carts', auth('user'),
+    validateRequest(addToCartValidation),
+    orderController.addToCart)
+orderRoutes.post('/', auth('user'),
+    validateRequest(orderValidation),
+    orderController.createOrder)
 orderRoutes.post('/payment', auth('user'), orderController.makePayment)
-orderRoutes.get('/payment/verify-payment', auth('user'), orderController.verifyPayment)
+
+orderRoutes.get('/cart/:email', auth('user'), orderController.getSingleUserCart)
+orderRoutes.get('/:orderId', auth('user'), orderController.getSingleOrderCart)
+orderRoutes.get('/user/:orderId', auth('user'), orderController.getAllOrdersOfUser)
+orderRoutes.get('/dashboard/:email', auth('user'), orderController.getAllOrdersOfUserDashboard)
+
+
+orderRoutes.delete('/cart/:id', auth('user'), orderController.removeItemFromCart)
+orderRoutes.delete('/order/:id', auth('user'), orderController.deleteOrder)
+
+
+
+
+orderRoutes.get('/payment/verify-payment', auth('admin'), orderController.verifyPayment)
+orderRoutes.get('/revenue', auth('admin'), orderController.generateRevenue)
+orderRoutes.get('/', auth('admin'), orderController.getAllOrders)
+
+
+
+
+
 
 export default orderRoutes

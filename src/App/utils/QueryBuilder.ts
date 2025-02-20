@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
 import { FilterQuery, Query } from 'mongoose';
 
 class QueryBuilder<T> {
@@ -26,9 +27,9 @@ class QueryBuilder<T> {
         return this;
     }
 
-    filter() {
+    pricefilter() {
         const queryObj = { ...this.query };
-        const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+        const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields', 'categories'];
         excludeFields.forEach((el) => delete queryObj[el]);
 
         if (queryObj.priceRange) {
@@ -51,12 +52,7 @@ class QueryBuilder<T> {
                     break;
             }
         }
-        else if (this.query.categories) {
-            const categories = (this.query.categories as any).split(',');
-            this.modelQuery = this.modelQuery.find({
-                category: { $in: categories },
-            });
-        } else {
+        else {
             this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
         }
 
@@ -64,25 +60,28 @@ class QueryBuilder<T> {
         return this;
     }
 
+    categoriesfilter() {
+        if (this.query.categories) {
+            const categories = this.query.categories;
+            this.modelQuery = this.modelQuery.find({
+                category: { $in: categories },
+            });
+        }
+        return this;
+    }
     sort() {
-        const sort = this?.query?.sortOrder || 'asc';
-
+        const sort = this?.query?.sortOrder || "asc";
         if (sort === "asc") {
-            console.log('hitting asc', sort);
             this.modelQuery = this.modelQuery.sort({ price: 1 });
         } else if (sort === "desc") {
-            console.log('hitting desc', sort);
             this.modelQuery = this.modelQuery.sort({ price: -1 });
-        } else {
-            console.log('hittng default', sort);
-            this.modelQuery = this.modelQuery.sort(sort as string);
         }
         return this;
     }
 
     paginate() {
         const page = Number(this?.query?.page) || 1;
-        const limit = Number(this?.query?.limit) || 10;
+        const limit = Number(this?.query?.limit) || 6
         const skip = (page - 1) * limit;
 
         this.modelQuery = this.modelQuery.skip(skip).limit(limit);
@@ -97,7 +96,20 @@ class QueryBuilder<T> {
         this.modelQuery = this.modelQuery.select(fields);
         return this;
     }
+    async countTotal() {
+        const totalQueries = this.modelQuery.getFilter();
+        const total = await this.modelQuery.model.countDocuments(totalQueries);
+        const page = Number(this?.query?.page) || 1;
+        const limit = Number(this?.query?.limit) || 8;
+        const totalPage = Math.ceil(total / limit);
 
+        return {
+            page,
+            limit,
+            total,
+            totalPage,
+        };
+    }
 }
 
 export default QueryBuilder;

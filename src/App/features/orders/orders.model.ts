@@ -1,18 +1,26 @@
-import { Schema, Types, model } from 'mongoose'
-import IOrder from './orders.interface'
+import { Schema, model } from 'mongoose';
+import { ICart, IOrder } from './orders.interface';
 
-const orderSchema = new Schema(
+
+const cartSchema = new Schema<ICart>(
   {
     email: {
       type: String,
       required: [true, 'Email is required'],
-      match: [/.+\.+\..+/, 'Please enter a valid email address'],
       maxlength: [100, 'Email cannot be longer than 100 characters'],
+
     },
-    products: [{
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    products:
+    {
       product: {
-        type: Types.ObjectId,
-        ref: 'Product',
+        type: Schema.Types.ObjectId,
+        ref: 'products',
+        required: true,
       },
       quantity: {
         type: Number,
@@ -21,7 +29,34 @@ const orderSchema = new Schema(
         max: [100, 'Quantity cannot be more than 100'],
         default: 1,
       },
-    }],
+    },
+
+
+    totalPrice: {
+      type: Number,
+      required: [true, 'Total price is required'],
+      min: [0, 'Total price cannot be negative'],
+    },
+  },
+  { timestamps: true }
+);
+
+const orderSchema = new Schema<IOrder>(
+  {
+    userEmail: {
+      type: String,
+      required: [true, 'Email is required'],
+      maxlength: [100, 'Email cannot be longer than 100 characters'],
+    },
+    totalPrice: {
+      type: Number,
+      required: [true, 'Total price is required'],
+      min: [0, 'Total price cannot be negative'],
+    },
+    quantity: {
+      type: Number,
+      required: true
+    },
     status: {
       type: String,
       enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
@@ -33,41 +68,28 @@ const orderSchema = new Schema(
         enum: ['Pending', 'Paid', 'Initiated', 'Cancelled', 'Failed'],
         default: 'Pending',
       },
-      OrderId: {
-        type: String,
-        default: '',
-      },
-      sp_code: {
-        type: Number,
-        default: 0,
-      },
-      sp_message: {
-        type: String,
-        default: '',
-      },
-      method: {
-        type: String,
-        default: '',
-      },
-      date_time: {
-        type: String,
-        default: '',
-      },
-      bank_status: {
-        type: String,
-        default: '',
-      },
+      OrderId: String,
+      sp_code: Number,
+      sp_message: String,
+      method: String,
+      date_time: String,
+      bank_status: String,
+    },
+    products: {
+      type: [String],
+      required: [true, 'Product Ids are required'],
+      ref: 'products'
     },
 
-    totalPrice: {
-      type: Number,
-      required: [true, 'Total price is required'],
-      min: [0, 'Total price cannot be negative'],
-    },
   },
-  { timestamps: true },
+  { timestamps: true }
+
 )
 
-const OrderModel = model<IOrder>('Order', orderSchema)
 
-export default OrderModel
+
+
+const CartModel = model<ICart>('Carts', cartSchema)
+const OrderModel = model<IOrder>('Orders', orderSchema)
+
+export const Models = { CartModel, OrderModel }

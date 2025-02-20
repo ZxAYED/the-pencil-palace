@@ -58,7 +58,7 @@ declare module "Shurjopay" {
         transactionStatus: string; // State of the payment (e.g., Pending, Completed)
     }
 
-    interface VerificationRequest {
+    export interface VerificationRequest {
         order_id: string; // shurjoPay payment ID sent during callback (Mandatory)
     }
 

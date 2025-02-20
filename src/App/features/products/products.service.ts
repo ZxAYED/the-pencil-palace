@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AppError from "../../Error/AppError"
+import AppError from "../../Error/AppError";
 import QueryBuilder from "../../utils/QueryBuilder";
 import UploadImageToCloudinary from "../../utils/UploadImageToCloudinary";
-import { ICart, IProduct } from "./products.interface"
-    ;
-import { cartModel, productsModel } from "./products.model";
+import { IProduct } from "./products.interface";
+import { productsModel } from "./products.model";
 
 
 
@@ -31,21 +30,34 @@ const getAllProductsFromDb = async (query: any) => {
     const productsQuery = new QueryBuilder(
         productsModel.find(), query)
         .search(SearchableFields)
-        .filter()
+        .pricefilter()
+        .categoriesfilter()
         .sort()
         .paginate()
         .fields();
 
 
-
     const result = await productsQuery.modelQuery;
 
 
-    return result
+    const meta = await productsQuery.countTotal();
+
+    const isFeatured = await productsModel.find({ isFeatured: true })
+
+    return {
+        meta,
+        isFeatured,
+        result,
+    };
 
 }
 const getSingleProductFromDb = async (payload: string) => {
     const product = await productsModel.findById(payload)
+    return product
+
+}
+const getAllproductsForAdminFromDb = async () => {
+    const product = await productsModel.find()
     return product
 
 }
@@ -84,21 +96,9 @@ const deleteProductIntoDb = async (payload: string) => {
     return product
 }
 
-const addToCart = async (payload: ICart) => {
-    const product = await cartModel.create(payload)
-    return product
-}
-const deleteCart = async (payload: string) => {
-    const product = await cartModel.findByIdAndDelete(payload)
-    return product
-}
 
 
-const getCart = async (userEmail: string) => {
 
-    const product = await cartModel.find({ userEmail }).populate('productId').populate('userId')
-    return product
-}
 
 export const productsService = {
     createProductIntoDb,
@@ -106,7 +106,5 @@ export const productsService = {
     getSingleProductFromDb,
     updateProductIntoDb,
     deleteProductIntoDb,
-    getCart,
-    addToCart,
-    deleteCart
+    getAllproductsForAdminFromDb
 }

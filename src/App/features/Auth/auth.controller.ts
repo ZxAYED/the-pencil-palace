@@ -15,7 +15,7 @@ const register = CatchAsync(async (req: Request, res: Response, next: NextFuncti
 
 const login = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const result = await AuthService.login(req.body);
-    console.log(result)
+
     res.status(200).json({
         success: true,
         message: 'User logged in successfully',

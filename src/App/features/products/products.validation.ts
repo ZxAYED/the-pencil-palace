@@ -19,7 +19,7 @@ const createProductsValidationSchema = z.object({
     mimetype: z.string().optional(),
   }).optional(),
   inStock: z.boolean().optional().default(true),
-  isFeatured: z.boolean().optional().default(true),
+  isFeatured: z.boolean().optional().default(false),
   rating: z.number().optional(),
   features: z.string()
 })
@@ -55,4 +55,5 @@ const addToCartValidationSchema = z.object({
   total: z.number(),
 })
 
-export { createProductsValidationSchema, updateProductsValidationSchema, addToCartValidationSchema }
+export { addToCartValidationSchema, createProductsValidationSchema, updateProductsValidationSchema }
+

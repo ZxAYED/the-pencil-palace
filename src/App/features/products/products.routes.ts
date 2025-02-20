@@ -1,10 +1,10 @@
 import { Router } from "express"
-import { productsController } from "./products.controller"
-import validateRequest from "../../utils/ValidateRequest"
-import { addToCartValidationSchema, createProductsValidationSchema, updateProductsValidationSchema } from "./products.validation"
+import AppError from "../../Error/AppError"
 import auth from "../../middleware/auth"
 import upload from "../../utils/multer.config"
-import AppError from "../../Error/AppError"
+import validateRequest from "../../utils/ValidateRequest"
+import { productsController } from "./products.controller"
+import { createProductsValidationSchema, updateProductsValidationSchema } from "./products.validation"
 
 
 const productsRouter = Router()
@@ -35,6 +35,7 @@ productsRouter.post(
 );
 
 productsRouter.get('/', productsController.getAllproducts)
+productsRouter.get('/admin', productsController.getAllproductsForAdmin)
 
 productsRouter.get('/:productId', productsController.getSingleproduct)
 
@@ -56,9 +57,7 @@ productsRouter.delete('/:productId', auth('admin'), productsController.deletePro
 
 
 
-productsRouter.post('/cart', auth('user'), validateRequest(addToCartValidationSchema), productsController.addToCart)
-productsRouter.get('/cart/:userEmail', auth('user'), productsController.getCart)
-productsRouter.delete('/cart/:id', auth('user'), productsController.deleteCart)
+
 
 
 

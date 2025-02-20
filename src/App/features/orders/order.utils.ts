@@ -1,14 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 
-import config from '../../config';
 import Shurjopay, { PaymentResponse, VerificationResponse } from 'Shurjopay';
-
-
-
-
-
-
+import config from '../../config';
 const shurjopay = new Shurjopay()
 
 shurjopay.config(
