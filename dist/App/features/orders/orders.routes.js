@@ -1,0 +1,25 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_1 = __importDefault(require("../../middleware/auth"));
+const ValidateRequest_1 = __importDefault(require("../../utils/ValidateRequest"));
+const orders_controller_1 = require("./orders.controller");
+const orders_validation_1 = require("./orders.validation");
+const orderRoutes = (0, express_1.Router)();
+orderRoutes.post('/carts', (0, auth_1.default)('user'), (0, ValidateRequest_1.default)(orders_validation_1.addToCartValidation), orders_controller_1.orderController.addToCart);
+orderRoutes.post('/', (0, auth_1.default)('user'), (0, ValidateRequest_1.default)(orders_validation_1.orderValidation), orders_controller_1.orderController.createOrder);
+orderRoutes.post('/payment', (0, auth_1.default)('user'), orders_controller_1.orderController.makePayment);
+orderRoutes.get('/cart/:email', (0, auth_1.default)('user'), orders_controller_1.orderController.getSingleUserCart);
+orderRoutes.get('/:orderId', (0, auth_1.default)('user'), orders_controller_1.orderController.getSingleOrderCart);
+orderRoutes.get('/user/:orderId', (0, auth_1.default)('user'), orders_controller_1.orderController.getAllOrdersOfUser);
+orderRoutes.get('/user/singleOrder/:orderId', (0, auth_1.default)('user'), orders_controller_1.orderController.getSingleOrdersOfUser);
+orderRoutes.get('/dashboard/:email', (0, auth_1.default)('user'), orders_controller_1.orderController.getAllOrdersOfUserDashboard);
+orderRoutes.delete('/cart/:id', (0, auth_1.default)('user'), orders_controller_1.orderController.removeItemFromCart);
+orderRoutes.delete('/order/:id', (0, auth_1.default)('user'), orders_controller_1.orderController.deleteOrder);
+orderRoutes.get('/payment/verify-payment', (0, auth_1.default)('user'), orders_controller_1.orderController.verifyPayment);
+orderRoutes.get('/admin-revenue', orders_controller_1.orderController.generateRevenue);
+orderRoutes.get('/', (0, auth_1.default)('admin'), orders_controller_1.orderController.getAllOrders);
+exports.default = orderRoutes;
