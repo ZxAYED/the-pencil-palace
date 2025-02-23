@@ -101,20 +101,20 @@ MongoDB (local or remote instance)
    Copy code
    npm run dev
    The server will run at http://localhost:5000.
-
-API Endpoints
-Product Endpoints
-Create Product: POST /api/products
-Get All Products: GET /api/products
-Get Product by ID: GET /api/products/:productId
-Update Product: PUT /api/products/:productId
-Delete Product: DELETE /api/products/:productId
-Order Endpoints
-Place an Order: POST /api/orders
-Calculate Revenue: GET /api/orders/revenue
-Code Quality
-Prettier
-Prettier ensures consistent code formatting. The configuration is in .prettierrc.
+   Live link - https://the-pencil-palace.onrender.com/api
+   API Endpoints
+   Product Endpoints
+   Create Product: POST /api/products
+   Get All Products: GET /api/products
+   Get Product by ID: GET /api/products/:productId
+   Update Product: PUT /api/products/:productId
+   Delete Product: DELETE /api/products/:productId
+   Order Endpoints
+   Place an Order: POST /api/orders
+   Calculate Revenue: GET /api/orders/revenue
+   Code Quality
+   Prettier
+   Prettier ensures consistent code formatting. The configuration is in .prettierrc.
 
 Run Prettier manually:
 bash

@@ -62,7 +62,14 @@ class QueryBuilder<T> {
 
     categoriesfilter() {
         if (this.query.categories) {
-            const categories = this.query.categories;
+            let categories: string | string[] = this.query.categories;
+
+            if (typeof categories === "string") {
+                categories = (categories as string).split(",");
+            }
+
+            console.log("Backend Categories:", categories);
+
             this.modelQuery = this.modelQuery.find({
                 category: { $in: categories },
             });
@@ -70,12 +77,11 @@ class QueryBuilder<T> {
         return this;
     }
     sort() {
-        const sort = this?.query?.sortOrder || "asc";
-        if (sort === "asc") {
-            this.modelQuery = this.modelQuery.sort({ price: 1 });
-        } else if (sort === "desc") {
-            this.modelQuery = this.modelQuery.sort({ price: -1 });
-        }
+        const sortOrder = this.query.sortOrder || "asc";
+
+        console.log("Sort Order:", sortOrder);
+
+        this.modelQuery = this.modelQuery.sort({ price: sortOrder === "asc" ? 1 : -1 });
         return this;
     }
 

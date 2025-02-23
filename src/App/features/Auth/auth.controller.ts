@@ -33,7 +33,7 @@ const changePassword = CatchAsync(async (req: Request, res: Response, next: Next
 })
 const requestPasswordReset = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const result = await AuthService.requestPasswordReset(req.body);
-    console.log(req.body, 'from auth COntrol')
+
     res.status(200).json({
         success: true,
         message: 'Password reset link  sent  to email successfully',
