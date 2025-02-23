@@ -1,10 +1,10 @@
-import express, { Application, RequestHandler } from 'express'
 import cors from 'cors'
-import productsRouter from './App/features/products/products.routes'
+import express, { Application, RequestHandler } from 'express'
 import globalErrorHandler from './App/Error/GlobalErrorHandlers'
-import orderRoutes from './App/features/orders/orders.routes'
 import NotFound from './App/Error/NotFound'
 import authRouter from './App/features/Auth/auth.routes'
+import orderRoutes from './App/features/orders/orders.routes'
+import productsRouter from './App/features/products/products.routes'
 
 import adminRouter from './App/features/admin/admin.routes'
 
@@ -15,7 +15,7 @@ const app: Application = express()
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://the-pencil-palace.netlify.app'],
   credentials: true
 }))
 app.use(express.json());
