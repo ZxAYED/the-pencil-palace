@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import mongoose from "mongoose";
 import { PaymentResponse, VerificationResponse } from "Shurjopay";
+import AppError from "../../Error/AppError";
 import { productsModel } from "../products/products.model";
 import { makePayment, verifyPayment } from "./order.utils";
 import { ICart, SurjoPayload } from "./orders.interface";
@@ -105,8 +107,13 @@ const getSingleUserCartFromDb = async (userEmail: string) => {
 
 }
 const getSingleOrderFromDb = async (orderId: string) => {
-    console.log(orderId);
+
     const result = await Models.OrderModel.findById(orderId).populate('products')
+    return result
+}
+const getSingleOrdersOfUserFromDb = async (OrderId: string) => {
+
+    const result = await Models.OrderModel.findOne({ OrderId: OrderId }).populate('products')
     return result
 }
 const getAllOrdersOfUserDashboardIntoDb = async (email: string) => {
@@ -141,12 +148,12 @@ const createOrderIntoDb = async (payload: { userEmail: string, totalPrice: numbe
 const makePaymentIntoDb = async (payload: SurjoPayload, client: string): Promise<any> => {
 
     const clientIp = client === '::1' ? '127.0.0.1' : client;
+
     const surjoPayload = {
         ...payload,
-        clientIp
+        client_ip: clientIp
     }
 
-    console.log(clientIp);
     const payment = await makePayment(surjoPayload) as PaymentResponse
     if (payment?.transactionStatus) {
 
@@ -154,8 +161,8 @@ const makePaymentIntoDb = async (payload: SurjoPayload, client: string): Promise
             payment:
             {
                 status: 'Initiated',
-                OrderId: payment.sp_order_id
-            }
+
+            }, OrderId: payment.sp_order_id
         },
             { new: true, runValidators: true })
     }
@@ -168,26 +175,42 @@ const makePaymentIntoDb = async (payload: SurjoPayload, client: string): Promise
         });
     }
 
-    return payment
+    if (payment?.transactionStatus === 'Completed') {
+        await Models.OrderModel.findByIdAndUpdate(payload.order_id, { paymentStatus: 'Initiated' })
+    }
+    return payment.checkout_url
 
 }
 
 const verifyPaymentIntoDb = async (orderId: string) => {
-    const result = await verifyPayment(orderId) as VerificationResponse[]
-    if (result?.[0]?.transaction_status) {
-        await Models.OrderModel.findByIdAndUpdate(orderId, {
+    const session = await mongoose.startSession();
+
+
+    try {
+        session.startTransaction();
+        const result = await verifyPayment(orderId) as VerificationResponse[]
+
+        await Models.OrderModel.updateOne({ OrderId: result?.[0]?.order_id }, {
             payment: {
                 status: result?.[0]?.bank_status === 'Success' ? "Paid" : result?.[0]?.bank_status === 'Failed' ? "Pending" : result?.[0]?.bank_status === 'Cancel' ? "Cancelled" : "Initiated",
+                orderId,
                 sp_code: result?.[0]?.sp_code,
                 sp_message: result?.[0]?.sp_message,
                 method: result?.[0]?.method,
                 date_time: result?.[0]?.date_time,
                 bank_status: result?.[0]?.bank_status,
             },
-            status: "Processing",
         }, { new: true, runValidators: true })
+
+        await session.commitTransaction();
+        await session.endSession();
+        return result
+
+    } catch (err: any) {
+        await session.abortTransaction();
+        await session.endSession();
+        throw new AppError(err, 'Failed to verify payment');
     }
-    return result
 
 
 }
@@ -220,7 +243,6 @@ const deleteOrderFromDb = async (orderId: string) => {
 }
 
 const getAllOrdersOfUserIntoDb = async (orderId: string) => {
-    console.log(orderId);
     const result = await Models.OrderModel.findById(orderId).populate('products')
     return result
 }
@@ -239,5 +261,5 @@ export const orderService = {
     verifyPaymentIntoDb,
     createOrderIntoDb,
     getSingleOrderFromDb,
-    getAllOrdersIntoDb, deleteOrderFromDb
+    getAllOrdersIntoDb, deleteOrderFromDb, getSingleOrdersOfUserFromDb
 }

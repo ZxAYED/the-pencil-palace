@@ -68,7 +68,7 @@ const orderSchema = new Schema<IOrder>(
         enum: ['Pending', 'Paid', 'Initiated', 'Cancelled', 'Failed'],
         default: 'Pending',
       },
-      OrderId: String,
+
       sp_code: Number,
       sp_message: String,
       method: String,
@@ -80,7 +80,7 @@ const orderSchema = new Schema<IOrder>(
       required: [true, 'Product Ids are required'],
       ref: 'products'
     },
-
+    OrderId: String,
   },
   { timestamps: true }
 

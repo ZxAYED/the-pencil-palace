@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import CatchAsync from '../../utils/CatchAsync';
-import { Models } from './orders.model';
 import { orderService } from './orders.service';
 
 
@@ -30,7 +29,16 @@ const createOrder = CatchAsync(async (req: Request, res: Response) => {
 const getAllOrdersOfUser = CatchAsync(async (req: Request, res: Response) => {
   const result = await orderService.getAllOrdersOfUserIntoDb(req.params.orderId)
   res.status(200).json({
-    message: 'All Orders fetched successfully',
+    message: 'Order fetched successfully',
+    success: true,
+    status: 200,
+    data: result,
+  })
+})
+const getSingleOrdersOfUser = CatchAsync(async (req: Request, res: Response) => {
+  const result = await orderService.getSingleOrdersOfUserFromDb(req.params.orderId)
+  res.status(200).json({
+    message: 'Order fetched successfully',
     success: true,
     status: 200,
     data: result,
@@ -103,9 +111,6 @@ const getSingleOrderCart = CatchAsync(async (req: Request, res: Response) => {
 const makePayment = CatchAsync(async (req: Request, res: Response) => {
   const result = await orderService.makePaymentIntoDb(req.body, req.ip as string)
 
-  if (result?.transactionStatus === 'Completed') {
-    await Models.OrderModel.findByIdAndUpdate(req.body.order_id, { paymentStatus: 'Initiated' })
-  }
   res.status(200).json({
     message: 'Payment successful',
     success: true,
@@ -113,11 +118,11 @@ const makePayment = CatchAsync(async (req: Request, res: Response) => {
     data: result,
   })
 })
+
 const verifyPayment = CatchAsync(async (req: Request, res: Response) => {
 
-  const result = await orderService.verifyPaymentIntoDb(req.query.orderId as string)
+  const result = await orderService.verifyPaymentIntoDb(req.query.order_id as string)
 
-  await Models.OrderModel.findByIdAndUpdate(req.query.order_id as string, { status: result.transaction_status })
   res.status(200).json({
     message: 'Payment verified successfully',
     success: true,
@@ -126,5 +131,5 @@ const verifyPayment = CatchAsync(async (req: Request, res: Response) => {
 })
 export const orderController = {
   addToCart, getAllOrdersOfUserDashboard,
-  generateRevenue, createOrder, getSingleOrderCart, getAllOrdersOfUser, getSingleUserCart, removeItemFromCart, makePayment, verifyPayment, getAllOrders, deleteOrder
+  generateRevenue, createOrder, getSingleOrderCart, getAllOrdersOfUser, getSingleUserCart, removeItemFromCart, makePayment, verifyPayment, getAllOrders, deleteOrder, getSingleOrdersOfUser
 };

@@ -72,7 +72,7 @@ const updateProductIntoDb = async (payload: string, data: IProduct, file: any) =
             const uploadResponse = await UploadImageToCloudinary(imageName, fileBuffer);
             data.profileImage = uploadResponse.url;
         } catch (error) {
-            console.log(error)
+
             throw new AppError(500, 'Failed to upload image');
 
         }

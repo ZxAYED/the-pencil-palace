@@ -16,13 +16,13 @@ export const makePayment = async (payload: any) => {
 
     return new Promise((resolve, reject) => {
         shurjopay.makePayment(payload, (response: PaymentResponse) => {
+
             resolve(response)
         }, (error: any) => {
+
             reject(error)
         })
     })
-
-
 }
 export const verifyPayment = async (orderId: any) => {
     return new Promise((resolve, reject) => {

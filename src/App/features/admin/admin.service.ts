@@ -4,7 +4,7 @@ import userModel from "../Auth/auth.model";
 
 const updateUserIntoDb = async (id: string, payload: Partial<IAuthRegister>) => {
     const isUserExits = await userModel.findById(id);
-    console.log(id, payload, 'from service')
+
     if (!isUserExits) {
         throw new AppError(404, 'User not found');
     }

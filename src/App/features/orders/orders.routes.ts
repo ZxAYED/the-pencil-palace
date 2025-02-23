@@ -21,6 +21,7 @@ orderRoutes.post('/payment', auth('user'), orderController.makePayment)
 orderRoutes.get('/cart/:email', auth('user'), orderController.getSingleUserCart)
 orderRoutes.get('/:orderId', auth('user'), orderController.getSingleOrderCart)
 orderRoutes.get('/user/:orderId', auth('user'), orderController.getAllOrdersOfUser)
+orderRoutes.get('/user/singleOrder/:orderId', auth('user'), orderController.getSingleOrdersOfUser)
 orderRoutes.get('/dashboard/:email', auth('user'), orderController.getAllOrdersOfUserDashboard)
 
 
@@ -30,8 +31,8 @@ orderRoutes.delete('/order/:id', auth('user'), orderController.deleteOrder)
 
 
 
-orderRoutes.get('/payment/verify-payment', auth('admin'), orderController.verifyPayment)
-orderRoutes.get('/revenue', auth('admin'), orderController.generateRevenue)
+orderRoutes.get('/payment/verify-payment', auth('user'), orderController.verifyPayment)
+orderRoutes.get('/admin-revenue', orderController.generateRevenue)
 orderRoutes.get('/', auth('admin'), orderController.getAllOrders)
 
 

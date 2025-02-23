@@ -19,9 +19,10 @@ export interface IOrder {
   quantity: number
   products: string[];
   status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  OrderId: string;
   payment: {
     status: 'Pending' | 'Paid' | 'Initiated' | 'Cancelled' | 'Failed';
-    OrderId: string;
+
     sp_code: number;
     sp_message: string;
     method: string;
