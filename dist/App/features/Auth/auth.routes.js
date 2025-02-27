@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const ValidateRequest_1 = __importDefault(require("../../utils/ValidateRequest"));
 const auth_controller_1 = require("./auth.controller");
 const auth_validation_1 = require("./auth.validation");
-const ValidateRequest_1 = __importDefault(require("../../utils/ValidateRequest"));
-const multer_config_1 = __importDefault(require("../../utils/multer.config"));
 const AppError_1 = __importDefault(require("../../Error/AppError"));
+const multer_config_1 = __importDefault(require("../../utils/multer.config"));
 const authRouter = (0, express_1.Router)();
 authRouter.post('/register', multer_config_1.default.single('profileImage'), (req, res, next) => {
     req.body.profileImage = req === null || req === void 0 ? void 0 : req.file;

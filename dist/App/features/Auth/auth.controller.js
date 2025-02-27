@@ -41,7 +41,6 @@ const changePassword = (0, CatchAsync_1.default)((req, res, next) => __awaiter(v
 }));
 const requestPasswordReset = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.AuthService.requestPasswordReset(req.body);
-    console.log(req.body, 'from auth COntrol');
     res.status(200).json({
         success: true,
         message: 'Password reset link  sent  to email successfully',

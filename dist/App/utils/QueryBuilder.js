@@ -56,7 +56,10 @@ class QueryBuilder {
     }
     categoriesfilter() {
         if (this.query.categories) {
-            const categories = this.query.categories;
+            let categories = this.query.categories;
+            if (typeof categories === "string") {
+                categories = categories.split(",");
+            }
             this.modelQuery = this.modelQuery.find({
                 category: { $in: categories },
             });
@@ -64,14 +67,8 @@ class QueryBuilder {
         return this;
     }
     sort() {
-        var _a;
-        const sort = ((_a = this === null || this === void 0 ? void 0 : this.query) === null || _a === void 0 ? void 0 : _a.sortOrder) || "asc";
-        if (sort === "asc") {
-            this.modelQuery = this.modelQuery.sort({ price: 1 });
-        }
-        else if (sort === "desc") {
-            this.modelQuery = this.modelQuery.sort({ price: -1 });
-        }
+        const sortOrder = this.query.sortOrder || "asc";
+        this.modelQuery = this.modelQuery.sort({ price: sortOrder === "asc" ? 1 : -1 });
         return this;
     }
     paginate() {

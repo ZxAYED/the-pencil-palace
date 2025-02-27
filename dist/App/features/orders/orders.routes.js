@@ -17,6 +17,7 @@ orderRoutes.get('/:orderId', (0, auth_1.default)('user'), orders_controller_1.or
 orderRoutes.get('/user/:orderId', (0, auth_1.default)('user'), orders_controller_1.orderController.getAllOrdersOfUser);
 orderRoutes.get('/user/singleOrder/:orderId', (0, auth_1.default)('user'), orders_controller_1.orderController.getSingleOrdersOfUser);
 orderRoutes.get('/dashboard/:email', (0, auth_1.default)('user'), orders_controller_1.orderController.getAllOrdersOfUserDashboard);
+orderRoutes.get('/', (0, auth_1.default)('admin'), orders_controller_1.orderController.getAllOrders);
 orderRoutes.delete('/cart/:id', (0, auth_1.default)('user'), orders_controller_1.orderController.removeItemFromCart);
 orderRoutes.delete('/order/:id', (0, auth_1.default)('user'), orders_controller_1.orderController.deleteOrder);
 orderRoutes.get('/payment/verify-payment', (0, auth_1.default)('user'), orders_controller_1.orderController.verifyPayment);
