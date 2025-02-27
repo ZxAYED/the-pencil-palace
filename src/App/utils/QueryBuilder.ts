@@ -68,7 +68,7 @@ class QueryBuilder<T> {
                 categories = (categories as string).split(",");
             }
 
-            console.log("Backend Categories:", categories);
+
 
             this.modelQuery = this.modelQuery.find({
                 category: { $in: categories },
@@ -79,7 +79,7 @@ class QueryBuilder<T> {
     sort() {
         const sortOrder = this.query.sortOrder || "asc";
 
-        console.log("Sort Order:", sortOrder);
+
 
         this.modelQuery = this.modelQuery.sort({ price: sortOrder === "asc" ? 1 : -1 });
         return this;

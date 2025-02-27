@@ -1,10 +1,10 @@
 import { Router } from "express";
+import validateRequest from "../../utils/ValidateRequest";
 import { AuthController } from "./auth.controller";
 import { createUserValidation, forgotPasswordValidation, loginUserValidation, refreshTokenValidation } from "./auth.validation";
-import validateRequest from "../../utils/ValidateRequest";
 
-import upload from "../../utils/multer.config";
 import AppError from "../../Error/AppError";
+import upload from "../../utils/multer.config";
 
 const authRouter = Router();
 

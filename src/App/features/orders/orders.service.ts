@@ -248,6 +248,7 @@ const getAllOrdersOfUserIntoDb = async (orderId: string) => {
 }
 const getAllOrdersIntoDb = async () => {
     const result = await Models.OrderModel.find().populate('products')
+
     return result
 }
 

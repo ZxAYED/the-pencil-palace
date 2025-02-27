@@ -54,6 +54,7 @@ const getAllOrdersOfUserDashboard = CatchAsync(async (req: Request, res: Respons
   })
 })
 const getAllOrders = CatchAsync(async (req: Request, res: Response) => {
+
   const result = await orderService.getAllOrdersIntoDb()
   res.status(200).json({
     message: 'All Orders fetched successfully',
