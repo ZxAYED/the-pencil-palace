@@ -6,7 +6,7 @@ import { AdminController } from "./admin.controller";
 
 
 const adminRouter = Router();
-adminRouter.get('/users', auth('admin'), AdminController.getAllUsers);
+adminRouter.get('/users', AdminController.getAllUsers);
 adminRouter.patch('/users/:id', auth('admin'), AdminController.updateUser);
 // adminRouter.patch('/users/:id', auth('admin'), AdminController.updateUser);
 

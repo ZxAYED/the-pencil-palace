@@ -23,7 +23,7 @@ orderRoutes.get('/:orderId', auth('user'), orderController.getSingleOrderCart)
 orderRoutes.get('/user/:orderId', auth('user'), orderController.getAllOrdersOfUser)
 orderRoutes.get('/user/singleOrder/:orderId', auth('user'), orderController.getSingleOrdersOfUser)
 orderRoutes.get('/dashboard/:email', auth('user'), orderController.getAllOrdersOfUserDashboard)
-orderRoutes.get('/', auth('admin'), orderController.getAllOrders)
+orderRoutes.get('/', orderController.getAllOrders)
 
 
 orderRoutes.delete('/cart/:id', auth('user'), orderController.removeItemFromCart)
