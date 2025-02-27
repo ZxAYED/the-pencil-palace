@@ -9,4 +9,5 @@ const admin_controller_1 = require("./admin.controller");
 const adminRouter = (0, express_1.Router)();
 adminRouter.get('/users', (0, auth_1.default)('admin'), admin_controller_1.AdminController.getAllUsers);
 adminRouter.patch('/users/:id', (0, auth_1.default)('admin'), admin_controller_1.AdminController.updateUser);
+// adminRouter.patch('/users/:id', auth('admin'), AdminController.updateUser);
 exports.default = adminRouter;
