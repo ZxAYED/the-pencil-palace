@@ -22,4 +22,5 @@ authRouter.post('/change-password', (0, ValidateRequest_1.default)(auth_validati
 authRouter.post('/request-password-reset', auth_controller_1.AuthController.requestPasswordReset);
 authRouter.post('/reset-password', auth_controller_1.AuthController.resetPassword);
 authRouter.post('/refresh-token', (0, ValidateRequest_1.default)(auth_validation_1.refreshTokenValidation), auth_controller_1.AuthController.refreshToken);
+//;
 exports.default = authRouter;
